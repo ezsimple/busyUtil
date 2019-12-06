@@ -138,10 +138,8 @@ public class ProcessorServiceFactory  implements ApplicationContextAware {
 	public void setQueryPath(Resource queryPath) {
 		try {
 			queryFullPath = queryPath.getFile().getAbsolutePath() + "/";
-			log.debug("queryFullPath : {}", queryFullPath);
 			if(repositoryPath==null){
-				repositoryPath = queryPath.getFile().getParent() + "/rep/";
-                log.debug("repositoryPath : {}", repositoryPath);
+				repositoryPath = queryPath.getFile().getParent() + "/repo/";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -342,4 +340,5 @@ public class ProcessorServiceFactory  implements ApplicationContextAware {
 		
 		return obj;
 	}
+
 }

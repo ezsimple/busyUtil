@@ -19,6 +19,8 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
@@ -28,6 +30,8 @@ public class MyBatisProcessor implements ProcessorService{
 	public static String PATH_SYSTEM = "system";
 	public static String PATH_MAPPER = "mapper";
 	private Map<String, List<MappedStatementInfo>> mappedStatementInfoMap = null;
+	
+	@Autowired
 	private SqlSession sqlSession;
 	
 	public Object execute(ProcessorParam processorParam) throws Exception {
@@ -39,6 +43,11 @@ public class MyBatisProcessor implements ProcessorService{
 		Map<String, Map<String, RSMeta>> resultMeta = new HashMap<String, Map<String,RSMeta>>();
 		log.info("MyBatisProcessor");
 		List<MappedStatementInfo> msList = getList(path, action);
+		
+		if(msList==null) {
+			log.warn("msList is null");
+            return resultSet;
+		}
 		
 		for(MappedStatementInfo msi : msList){
 			Object result = null;
@@ -91,11 +100,13 @@ public class MyBatisProcessor implements ProcessorService{
 		String key = path + "." + action;
 		
 		if(mappedStatementInfoMap!=null){
-			return mappedStatementInfoMap.get(key);
+			List<MappedStatementInfo> result = mappedStatementInfoMap.get(key);
+			if(result!=null)
+				return result;
 		}
 		
 		if(sqlSession==null){
-			sqlSession = (SqlSession)ProcessorServiceFactory.getBean(SqlSession.class);
+			sqlSession = (SqlSession)ProcessorServiceFactory.getBean(SqlSessionTemplate.class);
 			//if(sqlSession==null){
 			//	sqlSession = ((SqlSessionFactoryBean)ProcessorServiceFactory.getBean(SqlSessionFactoryBean.class)).get;
 			//}
@@ -104,6 +115,7 @@ public class MyBatisProcessor implements ProcessorService{
 		Map<String, List<MappedStatementInfo>> msInfoMap = new LinkedCaseInsensitiveMap<List<MappedStatementInfo>>();
 		
 		Collection<String> collection = sqlSession.getConfiguration().getMappedStatementNames();
+		log.debug("collection : {}", collection);
 	
 		
 		for(String id : collection){
