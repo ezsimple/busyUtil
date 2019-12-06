@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,28 +13,23 @@ import java.util.Set;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
+import org.apache.commons.collections.map.CaseInsensitiveMap;
+import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.session.Configuration;
+import org.apache.ibatis.type.JdbcType;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.core.io.Resource;
+import org.springframework.security.util.FieldUtils;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import io.mkeasy.webapp.db.DefaultDaoSupportor;
 import io.mkeasy.webapp.processor.MyBatisProcessor.MappedStatementInfo;
 import io.mkeasy.webapp.utils.CacheService;
 import io.mkeasy.webapp.utils.RSMeta;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
-
-import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.session.Configuration;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.type.JdbcType;
-import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.Resource;
-import org.springframework.security.util.FieldUtils;
-import org.springframework.util.LinkedCaseInsensitiveMap;
 
 /**
  * <pre>
@@ -144,8 +138,10 @@ public class ProcessorServiceFactory  implements ApplicationContextAware {
 	public void setQueryPath(Resource queryPath) {
 		try {
 			queryFullPath = queryPath.getFile().getAbsolutePath() + "/";
+			log.debug("queryFullPath : {}", queryFullPath);
 			if(repositoryPath==null){
 				repositoryPath = queryPath.getFile().getParent() + "/rep/";
+                log.debug("repositoryPath : {}", repositoryPath);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,7 +170,7 @@ public class ProcessorServiceFactory  implements ApplicationContextAware {
 				ProcessorService autoProcessor = (ProcessorService)applicationContext.getBean(key);
 				name = autoProcessor.toString();
 				
-				name = StringUtils.substringBetween(name, "kr.or.voj.webapp.processor.", "Processor").toLowerCase();
+				name = StringUtils.substringBetween(name, "io.mkeasy.webapp.processor.", "Processor").toLowerCase();
 				name = name.replace('.', '_');
 				processorServiceMap.put(name , autoProcessor);
 				

@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 // import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MapUtil {
 	public final static Map EMPTY = Collections.EMPTY_MAP ;
 	
@@ -95,6 +98,22 @@ public class MapUtil {
 			parent.put(parentPath, value) ;
 		}
 	}
+	
+	public static void printMap (Map<?, ?> map) {
+		if(map==null) return;
+		if(!(map instanceof Map)) return;
+        map.entrySet()
+           .stream()
+           .forEach(e -> log.debug(e.getKey() + " = " + e.getValue()));
+    }
 
+	public static Optional<Entry<String, Object>> findMap (Map<String, Object> map, String key) {
+		if(map == null || key == null) return null;
+		if(!(map instanceof Map)) return null;
+		return map.entrySet()
+				.stream()
+				.filter(e -> e.getKey().equalsIgnoreCase(key))
+				.findFirst();
+	}
 	
 }

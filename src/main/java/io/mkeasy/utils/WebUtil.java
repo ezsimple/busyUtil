@@ -3,38 +3,26 @@ package io.mkeasy.utils;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.io.Resource;
+import javax.annotation.Resource;
+
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WebUtil implements ApplicationContextAware {
+public class WebUtil {
 
-	private static ApplicationContext ctx;
+	/* Resource 는 static을 사용할 수 없습니다. */
+	@Resource 
+	AbstractApplicationContext ctx;
 
-	private static String WEB_ROOT = null;
+	private String WEB_ROOT = null;
 	
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        ctx = applicationContext;
-	}
-	
-	// WEB ROOT 의 절대경로를 가져온다.
-	public static String getWebRoot() throws IOException {
+	public String getWebRoot() throws IOException {
 
-		if (ctx==null) return null;
+		if (WEB_ROOT!=null)
+			return this.WEB_ROOT;
 
-		Resource resource = ctx.getResource("/");
-
-		if(resource==null || !resource.exists())
-			return null;
-		
-		if (!StringUtils.isEmpty(WEB_ROOT))
-			return WEB_ROOT;
-
+		org.springframework.core.io.Resource resource = ctx.getResource("/");
 		File f = resource.getFile();
 		WEB_ROOT = f.getPath();
 
