@@ -13,16 +13,6 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 import io.mkeasy.webapp.utils.DefaultMapRowMapper;
 import io.mkeasy.webapp.utils.ELUtil;
 
-
-/**
- * <pre>
- * 시스템명 : KT_MVNO_KPM
- * 작 성 자 : 석승한
- * 작 성 일 : 2014. 3. 18
- * 설    명 : Test
- * 
- * </pre>
- */
 public class DefaultDaoSupportor extends SimpleJdbcDaoSupport{
 
 	/**

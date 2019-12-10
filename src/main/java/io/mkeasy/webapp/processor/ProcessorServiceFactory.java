@@ -31,15 +31,6 @@ import io.mkeasy.webapp.utils.CacheService;
 import io.mkeasy.webapp.utils.RSMeta;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * <pre>
- * 시스템명 : KT_MVNO_KPM
- * 작 성 자 : 석승한
- * 작 성 일 : 2014. 3. 18
- * 설    명 : Test
- * 
- * </pre>
- */
 @Slf4j
 public class ProcessorServiceFactory  implements ApplicationContextAware {
 	private static Map<String, ProcessorService> processorServiceMap = new LinkedCaseInsensitiveMap<ProcessorService>();

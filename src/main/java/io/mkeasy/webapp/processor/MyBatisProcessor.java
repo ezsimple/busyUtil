@@ -133,15 +133,18 @@ public class MyBatisProcessor implements ProcessorService{
 			if(StringUtils.isEmpty(keyId)){
 				keyId = id;
 			}
-			String[] idL = id.split("_");
-			String returnId = idL.length == 3 ? idL[2] : "";
-			if(StringUtils.isEmpty(returnId)){
-				returnId = StringUtils.substringAfter(id, ".");
-			}			
-			
-			if(returnId.startsWith("#")){
-				isSingleRow = true;
-				returnId = returnId.substring(1);
+
+			String returnId = id;
+			if(StringUtils.contains(id, "_")) {
+                String[] idL = id.split("_");
+                returnId = idL.length == 3 ? idL[2] : "";
+                if(StringUtils.isEmpty(returnId)){
+                    returnId = StringUtils.substringAfter(id, ".");
+                }			
+                if(returnId.startsWith("#")){
+                    isSingleRow = true;
+                    returnId = returnId.substring(1);
+                }
 			}
 			
 			MappedStatement mappedStatement = null;
