@@ -117,8 +117,8 @@ public class MyBatisProcessor implements ProcessorService{
 		Collection<String> collection = sqlSession.getConfiguration().getMappedStatementNames();
 		log.debug("collection : {}", collection);
 	
-		
 		for(String id : collection){
+			if(!StringUtils.contains(id, ".")) continue;
 			idList.add(id);
 		}
 		
