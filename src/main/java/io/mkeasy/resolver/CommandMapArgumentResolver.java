@@ -10,6 +10,9 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CommandMapArgumentResolver implements HandlerMethodArgumentResolver {
 
 	@Override
@@ -31,8 +34,7 @@ public class CommandMapArgumentResolver implements HandlerMethodArgumentResolver
 			key = (String) enumeration.nextElement();
 			values = request.getParameterValues(key);
 			if (values != null) {
-				paramMap.put(key, (values.length > 1) ? values : values[0]);
-				paramMap.put("_"+key, values); // 항상 복수 처리 해야하는 경우
+				paramMap.put(key, values);
 			}
 		}
 		return paramMap;
