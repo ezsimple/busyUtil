@@ -15,7 +15,6 @@ public class MainTransactionProcessor implements ProcessorService{
 	public Object execute(ProcessorParam processorParam) throws Exception {
 		Map<String, Object> result = new LinkedCaseInsensitiveMap<Object>();
 		List<String> processorList = processorParam.getProcessorList();
-		
 		for(String processorId : processorList){
 			Object obj = ProcessorServiceFactory.getProcessorService(processorId.toLowerCase()).execute(processorParam);
 			

@@ -1,5 +1,7 @@
 package io.mkeasy.webapp.processor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -19,7 +21,10 @@ public class QueryFactory {
 	// Transaction Query
 	@Transactional
 	public static Object executeTx(String ns, String nsId, CaseInsensitiveMap params) throws Exception {
+		List<String> processorList = new ArrayList<String>();
+		processorList.add("mybatis");
 		ProcessorParam processorParam = new ProcessorParam(null);
+		processorParam.setProcessorList(processorList);
 		processorParam.setQueryPath(ns);
 		processorParam.setAction(nsId);
 		processorParam.setParams(params);
