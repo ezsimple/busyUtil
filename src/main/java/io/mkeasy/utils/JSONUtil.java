@@ -51,15 +51,18 @@ public class JSONUtil {
 			}
 			return json;
 		} else if (object instanceof Iterable) {
-			JSONArray json = new JSONArray();
+            JSONArray jsonArry = new JSONArray();
 			for (Object value : ((Iterable)object)) {
-				json.put(value);
+				jsonArry.put(toJSON(value));
 			}
-			return json;
+			return jsonArry;
 		} else {
 			return object;
 		}
-	}
+	}	
+	
+	
+	
 
 	public static boolean isEmpty(JSONObject object) {
 		if(object == null) return true;

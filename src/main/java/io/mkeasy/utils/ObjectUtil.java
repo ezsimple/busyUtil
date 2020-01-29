@@ -1,6 +1,7 @@
 package io.mkeasy.utils;
 
 import org.apache.commons.lang.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.ObjectUtils;
 
 public class ObjectUtil {
 
@@ -11,4 +12,10 @@ public class ObjectUtil {
 	public static String toString(Object object) {
 		return ReflectionToStringBuilder.toString(object);
 	}
+
+	// 객체가 널일 경우, 공백으로 치환하기
+	public static <T> Object emptyIfNull(T object) {
+		return ObjectUtils.defaultIfNull(object, "");
+	}
+	
 }

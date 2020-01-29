@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.collections.map.CaseInsensitiveMap;
+import org.apache.commons.lang.StringUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -26,15 +29,16 @@ public class CommandMap implements Serializable {
     }
     
     // 단일 파라미터의 경우
+    // 주의 : trim 이 추가됨
     public String getParam(String key){
     	Object obj = this.get(key);
     	if(obj == null) return null;
     	if(obj instanceof Integer 
     			|| obj instanceof Double
     			|| obj instanceof String) {
-    		return String.valueOf(obj);
+    		return StringUtils.trim(String.valueOf(obj));
     	}
-        return ((String[])obj)[0];
+        return StringUtils.trim(((String[])obj)[0]);
     }
 
     public void put(String key, Object value){
@@ -77,14 +81,20 @@ public class CommandMap implements Serializable {
         return map;
     }
     
-    public Map<String, Object> getQueryMap() {
+    public CaseInsensitiveMap getQueryMap() {
 		String key = null;
 		String[] values = null;
-		Map<String, Object> map = new HashMap<String, Object>();
+		CaseInsensitiveMap map = new CaseInsensitiveMap();
     	for(Entry<String, Object> entry : this.getMap().entrySet()) {
     		key = entry.getKey();
-    		values = (String[]) entry.getValue();
-    		map.put(key, (values.length>1?values:values[0]));
+    		Object o = entry.getValue();
+    		if(o instanceof String) {
+                map.put(key, o);
+    		}
+    		if(o instanceof String[]) {
+                values = (String[]) entry.getValue();
+                map.put(key, (values.length>1?values:values[0]));
+    		}
     	}
     	return map;
     }

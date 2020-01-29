@@ -3,26 +3,20 @@ package io.mkeasy.webapp.processor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletRequest;
-
-// import kr.or.voj.webapp.controller.AutoController;
-import io.mkeasy.webapp.utils.RSMeta;
-import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.session.SqlSession;
-import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -37,48 +31,43 @@ public class MyBatisProcessor implements ProcessorService{
 	public Object execute(ProcessorParam processorParam) throws Exception {
 		String path = processorParam.getQueryPath();
 		CaseInsensitiveMap params = processorParam.getParams();
+
+		String queryPath = processorParam.getQueryPath();
 		String action = processorParam.getAction();
-		ServletRequest request = processorParam.getRequest();
+		String returnId = queryPath + "." + action;
+
 		Map<String, Object> resultSet = new LinkedCaseInsensitiveMap<Object>();
-		Map<String, Map<String, RSMeta>> resultMeta = new HashMap<String, Map<String,RSMeta>>();
-		log.info("MyBatisProcessor");
-		List<MappedStatementInfo> msList = getList(path, action);
 		
-		if(msList==null) {
-			log.warn("msList is null");
-            return resultSet;
-		}
+		log.debug("queryPath = {}, action = {}", queryPath, action);
+		Object result = null;
+		SqlCommandType sqlCommandType = getSqlCommandType(path, action);
 		
-		for(MappedStatementInfo msi : msList){
-			Object result = null;
-			if (msi.isSelect) {
-				 List list = sqlSession.selectList(msi.id, params);
-				 Map<String, RSMeta> rSMeta = ProcessorServiceFactory.getRsMeta(msi.id+"-Inline"); 
-				 
-				 resultMeta.put(msi.returnId , rSMeta);
-				//	sqlSession.getConfiguration().getMappedStatement(msi.id).getResultMaps()
-				// sqlSession.
-				// Connection con = sqlSession.getConnection();
-				// con.
-				 if(msi.isSingleRow){
-					 result = list.size()>0 ? list.get(0) : new HashMap();
-				 }else{
-					 result = list;
-				 }
-			}else{
-				result = sqlSession.update(msi.id, params);
-			}
-			//쿼리결과 리턴값으로 설정
-			resultSet.put(msi.returnId, result);
-			//컬럼정보를 request에 설정한다.
-			if(request!=null){
-				request.setAttribute("__META__", resultMeta);
-			}
-			//결과를 쿼리의 인자로 설정한다.
-			params.put(msi.returnId, result);
+		if (sqlCommandType == SqlCommandType.SELECT) {
+			List<?> list = sqlSession.selectList(returnId, params);
+			result = list;
 		}
 
-		return resultSet;
+		if (sqlCommandType == SqlCommandType.INSERT) {
+			result = sqlSession.insert(returnId, params);
+		}
+
+		if (sqlCommandType == SqlCommandType.UPDATE) {
+			result = sqlSession.update(returnId, params);
+		}
+
+		if (sqlCommandType == SqlCommandType.DELETE) {
+			result = sqlSession.delete(returnId, params);
+		}
+
+//		if (sqlCommandType == SqlCommandType.FLUSH) {
+//			result = sqlSession.flushStatements();
+//		}
+
+		// sqlCommandType .eq. SqlCommandType.UNKNOWN)
+		// result is null
+        resultSet.put(returnId, result);
+        return resultSet;
+		
 	}
 
 	class MappedStatementInfo{
@@ -129,23 +118,24 @@ public class MyBatisProcessor implements ProcessorService{
 			boolean isSingleRow = false;
 			boolean isSelect = false;
 			
-			String keyId = StringUtils.substringBefore(id, "_");
-			if(StringUtils.isEmpty(keyId)){
-				keyId = id;
-			}
-
+//			String keyId = StringUtils.substringBefore(id, "_");
+//			if(StringUtils.isEmpty(keyId)){
+//				keyId = id;
+//			}
+			String keyId = id;
 			String returnId = id;
-			if(StringUtils.contains(id, "_")) {
-                String[] idL = id.split("_");
-                returnId = idL.length == 3 ? idL[2] : "";
-                if(StringUtils.isEmpty(returnId)){
-                    returnId = StringUtils.substringAfter(id, ".");
-                }			
-                if(returnId.startsWith("#")){
-                    isSingleRow = true;
-                    returnId = returnId.substring(1);
-                }
-			}
+
+//			if(StringUtils.contains(id, "_")) {
+//                String[] idL = id.split("_");
+//                returnId = idL.length == 3 ? idL[2] : "";
+//                if(StringUtils.isEmpty(returnId)){
+//                    returnId = StringUtils.substringAfter(id, ".");
+//                }			
+//                if(returnId.startsWith("#")){
+//                    isSingleRow = true;
+//                    returnId = returnId.substring(1);
+//                }
+//			}
 			
 			MappedStatement mappedStatement = null;
 			
@@ -179,5 +169,27 @@ public class MyBatisProcessor implements ProcessorService{
 		ProcessorServiceFactory.setMyBatisMappedStatementInfoMap(mappedStatementInfoMap);
 		
 		return mappedStatementInfoMap.get(key);
+	}
+
+	public SqlCommandType getSqlCommandType(String path, String action) {
+		String returnId = path + "." + action;
+
+		if(sqlSession==null){
+			sqlSession = (SqlSession)ProcessorServiceFactory.getBean(SqlSessionTemplate.class);
+		}
+
+		Collection<String> collection = sqlSession.getConfiguration().getMappedStatementNames();
+		log.debug("collection : {}", collection);
+		if (!collection.contains(returnId)) {
+			log.error("returnId = {} does not exist in MappedStatementNames", returnId);
+			return SqlCommandType.UNKNOWN;
+		}
+
+		MappedStatement mappedStatement = null;
+		try{
+			mappedStatement = sqlSession.getConfiguration().getMappedStatement(returnId);
+		}catch(Exception e){ }
+
+        return mappedStatement.getSqlCommandType();
 	}
 }

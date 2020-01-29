@@ -56,6 +56,34 @@ public class StringUtil {
         return String.format("%S%s%s", s.substring(0, 1),s.substring(1,s.length()),""); // 맨 앞자리만 대문자.
     }
 	
+	// DB저장을 위한 Y/N 으로 변경하기
+	public static boolean isYN(String s) {
+		if(StringUtils.equalsIgnoreCase(s, "Y")
+				|| StringUtils.equalsIgnoreCase(s, "N"))
+			return true;
+		return false;
+	}
+	public static String toYN(String s) {
+		if(s == null || StringUtils.isEmpty(s)) 
+			return "N";
+
+		if(isYN(s))
+			return s;
+
+		if(StringUtils.equals(s, "1")
+				|| StringUtils.equalsIgnoreCase(s, "true")) 
+			return "Y";
+
+		if(StringUtils.equals(s, "0")
+				|| StringUtils.equalsIgnoreCase(s, "false")) 
+			return "N";
+
+		return "N";
+	}
 	
+	// 널 일 경우 공백으로 채움.
+	public static String emptyIfNull(String str) {
+		return String.valueOf(ObjectUtil.emptyIfNull(str));
+	}
 
 }
