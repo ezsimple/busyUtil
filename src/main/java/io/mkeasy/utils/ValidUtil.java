@@ -1,6 +1,6 @@
 package io.mkeasy.utils;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
@@ -8,8 +8,12 @@ import net.sf.json.JSONObject;
 @Slf4j
 public class ValidUtil extends ValidateUtil {
 	
+	public static JSONObject makeResult() {
+		return _makeResult(false, "field_name is unknown", "message is unknown");
+	}
+	
 	// page auth -> db column auth
-	public static String convAuth(String auth) {
+	private static String convAuth(String auth) {
 		if("management".equalsIgnoreCase(auth)
 				|| "sales".equalsIgnoreCase(auth)
 				|| "logistics".equalsIgnoreCase(auth)
@@ -18,124 +22,105 @@ public class ValidUtil extends ValidateUtil {
 		log.debug("#ERROR# convAuth : {} is UNKNOWN", auth);
 		return "UNKNOWN";
 	}
-	
-	public static JSONObject required(String type, String s) {
-		boolean ret = _required(s);
-		String message = StringUtils.upperCase(type)+" : This is required.";
-		if(StringUtils.equals(type, "pass_confirm")) {
-			message = "PASSWORD CONFIRM : This is required.";
-		} else {
-			message = StringUtils.upperCase(type)+" : This is required.";
-		}
 
-		if(!ret) log.debug("#ERROR# required : type={}, s={}",type,s);
-		return _makeResult(ret, type, message);
-	}
-	
-	public static JSONObject authCheck(String s) {
-		boolean ret = _auth(s);
+	private static JSONObject authCheck(String value) {
+		boolean ret = _auth(value);
 		final String message = "GROUP is required.";
-		if(!ret) log.debug("#ERROR# authCheck : s={}",s);
+		if(!ret) log.debug("#ERROR# authCheck : value={}",value);
 		return _makeResult(ret, "auth", message);
 	}
-
-	public static JSONObject maxLength(String type, String s, int max) {
-		boolean ret = _maxLength(s, max);
-		final String message = "You must enter no more than "+max+" characters.";
-		if(!ret) log.debug("#ERROR# maxLength : type={}, s={}, max={}",type,s,max);
-		return _makeResult(ret, type, message);
-	}
 	
-	public static JSONObject minLength(String type, String s, int min) {
-		boolean ret = _minLength(s, min);
-		final String message = "You must enter at least "+min+" characters.";
-		if(!ret) log.debug("#ERROR# minLength : type={}, s={}, min={}",type,s,min);
-		return _makeResult(ret, type, message);
-	}
-	
-	public static JSONObject minmaxLength(String type, String s, int min, int max) {
-		boolean ret = _minmaxLength(s, min, max);
-		final String message = StringUtils.upperCase(type) + " : You must enter at least "+min+"characters and less than "+max+" characters.";
-		if(!ret) log.debug("#ERROR# minmaxLength : type={}, s={}, min={}, max={}",type,s,min,max);
-		return _makeResult(ret, type, message);
-	}
-	
-	public static JSONObject idFormat(String id) {
-		boolean ret = _idFormat(id);
-		final String message = "ID: Must be a combination of 8 to 14 English lowercase letters + numbers";
-		if(!ret) log.debug("#ERROR# idFormat : id={}",id);
-		return _makeResult(ret, "id", message);
-	}
-	
-	public static JSONObject nameFormat(String name) {
-		boolean ret = _nameFormat(name);
-		final String message = "Be within 2~20 characters, not special characters.";
-		if(!ret) log.debug("#ERROR# nameFormat : name={}",name);
-		return _makeResult(ret, "name", message);
+	public static boolean isEmpty(String value) {
+		return StringUtils.isEmpty(value);
 	}
 
-	public static JSONObject nameFormat(String name, int max) {
-		boolean ret = _nameFormat(name, max);
-		final String message = "Be within 2~"+max+" characters, not special characters.";
-		if(!ret) log.debug("#ERROR# nameFormat : name={}, max={}",name, max);
-		return _makeResult(ret, "name", message);
+	public static boolean underMaxLength(String name, String value, int max) {
+		// final String message = "You must enter no more than "+max+" characters.";
+		boolean ret = _maxLength(value, max);
+		return ret;
+	}
+	
+	public static boolean overMinLength(String name, String value, int min) {
+		// final String message = "You must enter at least "+min+" characters.";
+		boolean ret = _minLength(value, min);
+		return ret;
+	}
+	
+	public static boolean betweenMinMaxLength(String name, String value, int min, int max) {
+		// final String message = StringUtils.upperCase(name) + " : You must enter at least "+min+"characters and less than "+max+" characters.";
+		boolean ret = _minmaxLength(value, min, max);
+		return ret;
+	}
+	
+	public static boolean isIdFormat(String value) {
+		// final String message = "ID: Must be a combination of 8 to 14 English lowercase letters + numbers";
+		boolean ret = _idFormat(value);
+		return ret;
+	}
+	
+	public static boolean isNameFormat(String value) {
+		// final String message = "Be within 2~20 characters, not special characters.";
+		boolean ret = _nameFormat(value);
+		return ret;
 	}
 
-	public static JSONObject codeNameFormat(String name) {
-		boolean ret = _codeNameFormat(name);
-		final String message = "Code name can only be a few special characters in English.";
-		if(!ret) log.debug("#ERROR# codeNameFormat : name={}",name);
-		return _makeResult(ret, "name", message);
+	public static boolean isNameFormat(String value, int max) {
+		// final String message = "Be within 2~"+max+" characters, not special characters.";
+		boolean ret = _nameFormat(value, max);
+		return ret;
 	}
 
-	public static JSONObject upperCodeNameFormat(String name) {
-		boolean ret = _UpperCodeNameFormat(name);
+	public static boolean isCodeNameFormat(String value) {
+		// final String message = "Code name can only be a few special characters in English.";
+		boolean ret = _codeNameFormat(value);
+		return ret;
+	}
+
+	private static JSONObject upperCodeNameFormat(String value) {
+		boolean ret = _UpperCodeNameFormat(value);
 		final String message = "Code name can only uppercase English and Digits.";
-		if(!ret) log.debug("#ERROR# upperCodeNameFormat : name={}",name);
+		if(!ret) log.debug("#ERROR# upperCodeNameFormat : name={}",value);
 		return _makeResult(ret, "name", message);
 	}
 
-	public static JSONObject emailFormat(String email) {
-		boolean ret = _emailFormat(email);
-		final String message = "EMAIL : Not in email format.";
-		if(!ret) log.debug("#ERROR# emailFormat : email={}",email);
-		return _makeResult(ret, "email", message);
+	public static boolean isEmailFormat(String value) {
+		// final String message = "EMAIL : Not in email format.";
+		boolean ret = _emailFormat(value);
+		return ret;
 	}
 
-	public static JSONObject webUrlFormat(String url) {
-		boolean ret = _webUrl(url);
-		final String message = "Not Web Address format.";
-		if(!ret) log.debug("#ERROR# webUrlFormat : url={}",url);
-		return _makeResult(ret, "web_url", message);
+	public static boolean isUrlFormat(String value) {
+		// final String message = "Not Web Address format.";
+		boolean ret = _webUrl(value);
+		return ret;
 	}
 
-	public static JSONObject phoneFormat(String type, String s) {
-		boolean ret = _phoneFormat(s);
-		final String message = StringUtils.upperCase(type) + " : Not valid Phone number format.";
-		if(!ret) log.debug("#ERROR# phoneFormat : type={}, s={}",type, s);
-		return _makeResult(ret, type, message);
+	public static boolean isPhoneNumberFormat(String name, String value) {
+		// final String message = StringUtils.upperCase(name) + " : Not valid Phone number format.";
+		boolean ret = _phoneFormat(value);
+		return ret;
 	}
 	
-	public static JSONObject passwordFormat(String password) {
-		boolean ret = _passwordFormat(password);
+	public static boolean isPasswordFormat(String value) {
+		// final String message = "PASSWORD : Combinations of 8 to 14 characters, including uppercase, lowercase, and numbers in English";
 		// final String message = "The password must be a combination of at least 8 characters in English and lowercase letters plus numbers plus special characters.";
-		final String message = "PASSWORD : Combinations of 8 to 14 characters, including uppercase, lowercase, and numbers in English";
-		if(!ret) log.debug("#ERROR# passwordFormat : password={}",password);
-		return _makeResult(ret, "password", message);
+		boolean ret = _passwordFormat(value);
+		return ret;
 	}
 	
-	public static JSONObject passwordConfirm(String password, String pass_confirm) {
+	private static JSONObject passwordConfirm(String password, String pass_confirm) {
 		boolean ret = StringUtils.equals(password, pass_confirm);
 		final String message = "PASSWORD CONFIRM : Password does not match.";
 		if(!ret) log.debug("#ERROR# passwordConfirm : password={}, pass_confirm={}",password,pass_confirm);
 		return _makeResult(ret, "pass_confirm", message);
 	}
 
-	public static JSONObject decimalFormat(String type, String s) {
-		boolean ret = _decimalFormat(s);
-		final String message = "Not in numeric format.";
-		if(!ret) log.debug("#ERROR# decimalFormat : type={}, s={}",type,s);
-		return _makeResult(ret, type, message);
+	public static boolean isDecimalFormat(String value) {
+		return _decimalFormat(value);
+	}
+
+	public static boolean isAlphaNumericFormat(String value) {
+		return _alphaNumericFormat(value);
 	}
 
 	/*
@@ -152,11 +137,8 @@ public class ValidUtil extends ValidateUtil {
 	}
 	*/
 
-	public static JSONObject existSpecialChar(String type, String q) {
-		boolean ret = _existSpecialChar(q);
-		final String message = "Special characters exist.";
-		if(!ret) log.debug("#ERROR# existSpecialChar : type={}, s={}",type,q);
-		return _makeResult(ret, type, message);
+	public static boolean hasSpecialChar(String value) {
+		return _existSpecialChar(value);
 	}
 
 

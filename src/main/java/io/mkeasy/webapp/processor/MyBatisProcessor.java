@@ -59,12 +59,9 @@ public class MyBatisProcessor implements ProcessorService{
 			result = sqlSession.delete(returnId, params);
 		}
 
-//		if (sqlCommandType == SqlCommandType.FLUSH) {
-//			result = sqlSession.flushStatements();
-//		}
-
-		// sqlCommandType .eq. SqlCommandType.UNKNOWN)
-		// result is null
+		if(sqlCommandType == SqlCommandType.UNKNOWN) {
+			throw new Exception("queryId=" + returnId + " does not exist");
+		}
         resultSet.put(returnId, result);
         return resultSet;
 		

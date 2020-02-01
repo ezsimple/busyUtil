@@ -184,6 +184,11 @@ public class Patterns {
                 "(\\+[0-9]+[\\- \\.]*)?"        // +<digits><sdd>*
                 + "(\\([0-9]+\\)[\\- \\.]*)?"   // (<digits>)<sdd>*
                 + "([0-9][0-9\\- \\.]+[0-9])"); // <digit><digit|sdd>+<digit>
+    
+
+    /* AlphaNumeric Format Regexp */
+    public static final Pattern ALPHA_NUMERIC
+    	= Pattern.compile("^[a-zA-Z0-9]+$");
 
     /**
      *  Convenience method to take all of the non-null matching groups in a

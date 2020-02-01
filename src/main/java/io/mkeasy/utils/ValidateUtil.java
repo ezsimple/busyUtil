@@ -3,7 +3,7 @@ package io.mkeasy.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,11 +13,11 @@ import net.sf.json.JSONObject;
 @Component
 class ValidateUtil {
 
-	protected static boolean _required(String s) {
-		if(StringUtils.isEmpty(s))
-			return false;
-		return true;
-	}
+//	protected static boolean _required(String s) {
+//		if(StringUtils.isEmpty(s))
+//			return false;
+//		return true;
+//	}
 	
 	protected static boolean _auth(String s) {
 		JSONObject obj = new JSONObject();
@@ -132,10 +132,11 @@ class ValidateUtil {
 		// 특수문자 검사 : 특수 문자 존재하면 true
 		boolean chk = true;
 		for (int i = 0; i < s.length(); i++) {
+			chk = true;
 			char c = s.charAt(i);
-			if (Character.isAlphabetic(c)) continue;
-			if (Character.isWhitespace(c)) continue;
-			if (Character.isDigit(c)) continue;
+			if (Character.isAlphabetic(c)) {chk = false; continue;}
+			if (Character.isWhitespace(c)) {chk = false; continue;}
+			if (Character.isDigit(c)) {chk = false; continue;}
 			if (!Character.isLetterOrDigit(c)) {
 				if(c!=' '||c!='_'||c!='-'||c!='('||c!=')'||c!='#') { // 일부 특수 문자는 허용한다.(추가 예정)
 					log.debug("string={}, specialchar={}",s, c);
@@ -194,6 +195,17 @@ class ValidateUtil {
 		Matcher m = p.matcher(s);
 		boolean chk = m.matches();
 		log.debug("{} : {}({})", "ValidPhonFormatCallBack" , s, chk );
+		return chk;
+	}
+
+	// 알파벳+숫자로만 이루어진 경우 : true
+	protected static boolean _alphaNumericFormat(String s) {
+		if(StringUtils.isEmpty(s))
+			return false;
+		Pattern p = Patterns.ALPHA_NUMERIC;
+		Matcher m = p.matcher(s);
+		boolean chk = m.matches();
+		log.debug("{} : {}({})", "ValidAlphaNumericCallBack" , s, chk );
 		return chk;
 	}
 	

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.transaction.Transactional;
-
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.json.JSONArray;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import io.mkeasy.utils.JSONUtil;
 import io.mkeasy.utils.ListUtil;
@@ -22,16 +22,9 @@ public class QueryFactory {
 	}
 
 	// Transaction Query
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public static Object executeTx(String ns, String nsId, CaseInsensitiveMap params) throws Exception {
-		List<String> processorList = new ArrayList<String>();
-		processorList.add("mybatis");
-		ProcessorParam processorParam = new ProcessorParam(null);
-		processorParam.setProcessorList(processorList);
-		processorParam.setQueryPath(ns);
-		processorParam.setAction(nsId);
-		processorParam.setParams(params);
-		return ProcessorServiceFactory.executeMainTransaction(processorParam);
+		return ProcessorServiceFactory.executeQuery(ns, nsId, params);
 	}
 
 	// Get Query Results using CRUD query result
