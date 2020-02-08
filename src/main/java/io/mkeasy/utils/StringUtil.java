@@ -3,6 +3,7 @@ package io.mkeasy.utils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONObject;
 import org.springframework.util.ObjectUtils;
 
 public class StringUtil {
@@ -79,6 +80,10 @@ public class StringUtil {
 			return "N";
 
 		return "N";
+	}
+
+	public static JSONObject toJSON(String strJsonObject) throws Exception {
+		return JSONUtil.toJSON(strJsonObject);
 	}
 	
 	// 널 일 경우 공백으로 채움.

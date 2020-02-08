@@ -42,6 +42,14 @@ public class JSONUtil {
 
 	}
 
+	public static JSONObject toJSON(String strJsonObject) throws Exception {
+		try {
+		return new JSONObject(strJsonObject);
+		} catch (Exception e) {
+			throw new Exception("JSONObject Format이 아닙니다. : "+e.getMessage());
+		}
+	}
+
 	public static Object toJSON(Object object) throws JSONException {
 		if (object instanceof Map) {
 			JSONObject json = new JSONObject();
