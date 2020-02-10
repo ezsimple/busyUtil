@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mkeasy.utils.JSONUtil;
 import io.mkeasy.utils.ListUtil;
+import io.mkeasy.utils.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,6 +33,14 @@ public class QueryFactory {
 		String key = ns+"."+nsId;
 		Object map = ((Map<String, Object>) result).get(key);
 		return map;
+	}
+
+	// result는 getResult(ns,nsId,result)의 값입니다.
+	// result에서 첫번째만 Map으로 가져옵니다.
+	public static Map<String, Object> toMap(Object result) {
+		if(result==null)
+			return MapUtil.EMPTY;
+		return MapUtil.toFlat(((List<Map<String, Object>>) result).get(0));
 	}
 	
 	// result는 getResult(ns,nsId,result)의 값입니다.
