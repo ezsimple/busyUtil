@@ -38,7 +38,7 @@ public class QueryFactory {
 	// result는 getResult(ns,nsId,result)의 값입니다.
 	// result에서 첫번째만 Map으로 가져옵니다.
 	public static Map<String, Object> toMap(Object result) {
-		if(result==null)
+		if(ListUtil.isEmpty((List<Map<String, Object>>) result))
 			return MapUtil.EMPTY;
 		return MapUtil.toFlat(((List<Map<String, Object>>) result).get(0));
 	}

@@ -42,9 +42,17 @@ public class JSONUtil {
 
 	}
 
-	public static JSONObject toJSON(String strJsonObject) throws Exception {
+	public static net.sf.json.JSONObject toJSON(String strJsonObject) throws Exception {
 		try {
-		return new JSONObject(strJsonObject);
+            return new net.sf.json.JSONObject().fromObject(strJsonObject);
+		} catch (Exception e) {
+			throw new Exception("JSONObject Format이 아닙니다. : "+e.getMessage());
+		}
+	}
+
+	public static net.sf.json.JSONObject toJSON(Map<String, Object> map) throws Exception {
+		try {
+            return new net.sf.json.JSONObject().fromObject(map);
 		} catch (Exception e) {
 			throw new Exception("JSONObject Format이 아닙니다. : "+e.getMessage());
 		}

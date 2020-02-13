@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 
 @Slf4j
 public class MapUtil {
@@ -84,6 +85,10 @@ public class MapUtil {
 		}
 
 		return result ;
+	}
+	
+	public static JSONObject toJSON(Map<String, Object> map) throws Exception {
+		return JSONUtil.toJSON(map);
 	}
 	
 	private static void recursiveObject(Map<String, Object> parent, String parentPath, char div, Object value){
