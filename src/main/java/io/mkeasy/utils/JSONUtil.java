@@ -43,7 +43,7 @@ public class JSONUtil {
 
 	}
 
-	public static JSONObject toJSON(String strJsonObject) throws Exception {
+	public static net.sf.json.JSONObject toJSON(String strJsonObject) throws Exception {
 		try {
             return new JSONObject().fromObject(strJsonObject);
 		} catch (Exception e) {
