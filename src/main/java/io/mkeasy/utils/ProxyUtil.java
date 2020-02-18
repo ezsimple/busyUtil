@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -25,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 
 @Slf4j
 public class ProxyUtil {
@@ -91,7 +91,7 @@ public class ProxyUtil {
         // read the response
         InputStream in = new BufferedInputStream(conn.getInputStream());
         String result = IOUtils.toString(in, "UTF-8");
-        JSONObject jsonObject = new JSONObject(result);
+        JSONObject jsonObject = new JSONObject().fromObject(result);
         conn.disconnect();
         return jsonObject;
     }

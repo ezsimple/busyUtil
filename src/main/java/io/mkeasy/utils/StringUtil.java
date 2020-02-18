@@ -3,8 +3,9 @@ package io.mkeasy.utils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.json.JSONObject;
 import org.springframework.util.ObjectUtils;
+
+import net.sf.json.JSONObject;
 
 public class StringUtil {
 	public static String trim(String str) {

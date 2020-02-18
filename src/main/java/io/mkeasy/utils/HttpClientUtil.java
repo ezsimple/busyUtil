@@ -47,7 +47,8 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONObject;
+
+import net.sf.json.JSONObject;
 
 public class HttpClientUtil {
 
@@ -187,11 +188,12 @@ public class HttpClientUtil {
         httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
 	}
 
-	private static void setPostParams(HttpPost httpost, JSONObject params) throws UnsupportedEncodingException {
-		if(params == null) return;
-		ByteArrayEntity entity = new ByteArrayEntity(params.toString().getBytes("UTF-8"));
-        httpost.setEntity(entity);
-	}
+	// net.sf.json.JSONObject은 Map과 구분되지 않습니다.
+//	private static void setPostParams(HttpPost httpost, String params) throws UnsupportedEncodingException {
+//		if(params == null) return;
+//		ByteArrayEntity entity = new ByteArrayEntity(params.toString().getBytes("UTF-8"));
+//        httpost.setEntity(entity);
+//	}
 
 	public static String post(String url, Map<String, Object> params) throws Exception {
 

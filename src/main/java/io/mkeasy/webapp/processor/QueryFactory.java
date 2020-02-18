@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.json.JSONArray;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +12,7 @@ import io.mkeasy.utils.JSONUtil;
 import io.mkeasy.utils.ListUtil;
 import io.mkeasy.utils.MapUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 
 @Slf4j
 public class QueryFactory {
@@ -38,7 +38,7 @@ public class QueryFactory {
 	// result는 getResult(ns,nsId,result)의 값입니다.
 	// result에서 첫번째만 Map으로 가져옵니다.
 	public static Map<String, Object> toMap(Object result) {
-		if(result==null)
+		if(ListUtil.isEmpty((List<Map<String, Object>>) result))
 			return MapUtil.EMPTY;
 		return MapUtil.toFlat(((List<Map<String, Object>>) result).get(0));
 	}

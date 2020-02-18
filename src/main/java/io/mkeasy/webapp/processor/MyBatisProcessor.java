@@ -101,7 +101,7 @@ public class MyBatisProcessor implements ProcessorService{
 		Map<String, List<MappedStatementInfo>> msInfoMap = new LinkedCaseInsensitiveMap<List<MappedStatementInfo>>();
 		
 		Collection<String> collection = sqlSession.getConfiguration().getMappedStatementNames();
-		log.debug("collection : {}", collection);
+		// log.debug("collection : {}", collection);
 	
 		for(String id : collection){
 			if(!StringUtils.contains(id, ".")) continue;
@@ -176,7 +176,7 @@ public class MyBatisProcessor implements ProcessorService{
 		}
 
 		Collection<String> collection = sqlSession.getConfiguration().getMappedStatementNames();
-		log.debug("collection : {}", collection);
+		// log.debug("collection : {}", collection);
 		if (!collection.contains(returnId)) {
 			log.error("returnId = {} does not exist in MappedStatementNames", returnId);
 			return SqlCommandType.UNKNOWN;

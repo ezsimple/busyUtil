@@ -15,7 +15,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.context.request.RequestAttributes;
@@ -23,6 +22,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONObject;
 
 @Slf4j
 public class NetUtil {
@@ -92,26 +92,26 @@ public class NetUtil {
 	public static String getClientIP() {
 		HttpServletRequest req = getHttpServletRequest();
 		String ip = req.getHeader("X-FORWARDED-FOR");
-		log.info("TEST : X-FORWARDED-FOR : "+ip);
+		// log.info("TEST : X-FORWARDED-FOR : "+ip);
 		if (ip == null) {
 			ip = req.getHeader("Proxy-Client-IP");
-			log.info("TEST : Proxy-Client-IP : "+ip);
+            // log.info("TEST : Proxy-Client-IP : "+ip);
 		}
 		if (ip == null) {
 			ip = req.getHeader("WL-Proxy-Client-IP");
-			log.info("TEST : WL-Proxy-Client-IP : "+ip);
+			// log.info("TEST : WL-Proxy-Client-IP : "+ip);
 		}
 		if (ip == null) {
 			ip = req.getHeader("HTTP_CLIENT_IP");
-			log.info("TEST : HTTP_CLIENT_IP : "+ip);
+			// log.info("TEST : HTTP_CLIENT_IP : "+ip);
 		}
 		if (ip == null) {
 			ip = req.getHeader("HTTP_X_FORWARDED_FOR");
-			log.info("TEST : HTTP_X_FORWARDED_FOR : "+ip);
+			// log.info("TEST : HTTP_X_FORWARDED_FOR : "+ip);
 		}
 		if (ip == null) {
 			ip = req.getRemoteAddr();
-			log.info("TEST : getRemoteAddr : "+ip);
+			// log.info("TEST : getRemoteAddr : "+ip);
 		}
 		return ip;
 	}
@@ -125,19 +125,19 @@ public class NetUtil {
 	// Thread Safe 
 	public static JSONObject get(String url) throws Exception {
 		String response = HttpClientUtil.get(url);
-		return new JSONObject(response); // caution : dealloc memory
+		return new JSONObject().fromObject(response); // caution : dealloc memory
 	}
 
 	// Thread Safe 
 	public static JSONObject post(final String url, JSONObject params) throws Exception {
-		String response = HttpClientUtil.post(url, params);
+		String response = HttpClientUtil.post(url, JSONUtil.toMap(params));
 		// cmd_type=S의 경우 response가 별도 없습니다.
 		JSONObject ret = null;
 		if(StringUtils.isEmpty(response))
 			return null;
 
 		try {
-			ret = new JSONObject(response);
+			ret = new JSONObject().fromObject(response);
 		} catch (Exception e) {
 			log.debug("url : {}", url);
 			log.debug("req : {}", params);

@@ -6,9 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
+
 
 public class JSONUtil {
 
@@ -21,12 +22,12 @@ public class JSONUtil {
 
 	public static void clear(Object obj) {
 
-		if (obj instanceof net.sf.json.JSONObject) {
-			((net.sf.json.JSONObject) obj).clear();
+		if (obj instanceof JSONObject) {
+			((JSONObject) obj).clear();
 		}
 
-		if (obj instanceof net.sf.json.JSONArray) {
-			((net.sf.json.JSONArray) obj).clear();
+		if (obj instanceof JSONArray) {
+			((JSONArray) obj).clear();
 		}
 
 		if (obj instanceof org.json.JSONObject) {
@@ -44,7 +45,15 @@ public class JSONUtil {
 
 	public static JSONObject toJSON(String strJsonObject) throws Exception {
 		try {
-		return new JSONObject(strJsonObject);
+            return new JSONObject().fromObject(strJsonObject);
+		} catch (Exception e) {
+			throw new Exception("JSONObject Format이 아닙니다. : "+e.getMessage());
+		}
+	}
+
+	public static JSONObject toJSON(Map<String, Object> map) throws Exception {
+		try {
+            return new JSONObject().fromObject(map);
 		} catch (Exception e) {
 			throw new Exception("JSONObject Format이 아닙니다. : "+e.getMessage());
 		}
@@ -61,7 +70,7 @@ public class JSONUtil {
 		} else if (object instanceof Iterable) {
             JSONArray jsonArry = new JSONArray();
 			for (Object value : ((Iterable)object)) {
-				jsonArry.put(toJSON(value));
+				jsonArry.add(toJSON(value));
 			}
 			return jsonArry;
 		} else {
@@ -93,14 +102,14 @@ public class JSONUtil {
 
 	public static List toList(JSONArray array) throws JSONException {
 		List list = new ArrayList();
-		for (int i = 0; i < array.length(); i++) {
+		for (int i = 0; i < array.size(); i++) {
 			list.add(fromJson(array.get(i)));
 		}
 		return list;
 	}
 
 	private static Object fromJson(Object json) throws JSONException {
-		if (json == JSONObject.NULL) {
+		if (json == null) {
 			return null;
 		} else if (json instanceof JSONObject) {
 			return toMap((JSONObject) json);
@@ -113,10 +122,10 @@ public class JSONUtil {
 
 	public static boolean isValid(String json) {
 		try {
-			new JSONObject(json);
+			new JSONObject().fromObject(json);
 		} catch (JSONException e1) {
 			try {
-				new JSONArray(json);
+				new JSONArray().fromObject(json);
 			} catch (JSONException e2) {
 				return false;
 			}
