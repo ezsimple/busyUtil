@@ -70,7 +70,7 @@ public class QueryFactory {
 	// result는 getResult(ns,nsId,result)의 값입니다.
 	// result에서 JSONArray로 변환시켜 줍니다.
 	public static JSONArray toJSONArray(Object result) {
-		JSONArray json = (JSONArray) JSONUtil.toJSON(result);
+		JSONArray json = new JSONArray().fromObject(result);
 		return json;
 	}
 

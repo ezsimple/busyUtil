@@ -43,7 +43,7 @@ public class JSONUtil {
 
 	}
 
-	public static net.sf.json.JSONObject toJSON(String strJsonObject) throws Exception {
+	public static JSONObject toJSON(String strJsonObject) throws Exception {
 		try {
             return new JSONObject().fromObject(strJsonObject);
 		} catch (Exception e) {
@@ -60,26 +60,11 @@ public class JSONUtil {
 	}
 
 	public static Object toJSON(Object object) throws JSONException {
-		if (object instanceof Map) {
-			JSONObject json = new JSONObject();
-			Map map = (Map) object;
-			for (Object key : map.keySet()) {
-				json.put(key.toString(), toJSON(map.get(key)));
-			}
-			return json;
-		} else if (object instanceof Iterable) {
-            JSONArray jsonArry = new JSONArray();
-			for (Object value : ((Iterable)object)) {
-				jsonArry.add(toJSON(value));
-			}
-			return jsonArry;
-		} else {
-			return object;
+		if (object instanceof Iterable) {
+			return new JSONArray().fromObject(object);
 		}
+		return new JSONObject().fromObject(object);
 	}	
-	
-	
-	
 
 	public static boolean isEmpty(JSONObject object) {
 		if(object == null) return true;
