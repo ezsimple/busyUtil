@@ -70,11 +70,10 @@ public class QueryFactory {
 
 	// result는 getResult(ns,nsId,result)의 값입니다.
 	// result에서 JSONArray로 변환시켜 줍니다.
-	// net.sf.json.JSONObject에서는 ORACLE.TIMESTAMP 값에 대해 잘못된 파싱을 합니다.
-	public static JSONArray toJSONArray(Object result) {
-		JSONArray arr = new JSONArray();
-		arr.addAll((Collection) result);
-		return arr;
+	// org.json.simple(google), net.sf.json.JSONObject에서는 
+	// DATE, TIMESTAMP 값에 대해 잘못된 파싱을 합니다.
+	public static org.json.JSONArray toJSONArray(Object result) {
+		return JSONUtil.convertListToJson((List<Map<String, Object>>) result);
 	}
 
 }

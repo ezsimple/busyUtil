@@ -122,4 +122,27 @@ public class JSONUtil {
 		return json==null?null:json.toString(2);
 	}
 
+	// org.json.JSONObject, org.json.JSONArray만 사용해야 합니다.
+	// net.sf.json, org.json.simple 의 경우 날짜 변환에서 invalide json format string 을 만듭니다.
+	@SuppressWarnings({ "unchecked" })
+	public static org.json.JSONArray convertListToJson(List<Map<String, Object>> bankCdList) {
+		org.json.JSONArray jsonArray = new org.json.JSONArray();
+		for (Map<String, Object> map : bankCdList) {
+			jsonArray.put(convertMapToJson(map));
+		}
+		return jsonArray;
+	}
+
+	// map 을 json 형태로 변형
+	@SuppressWarnings({ "unchecked" })
+	public static org.json.JSONObject convertMapToJson(Map<String, Object> map) {
+		org.json.JSONObject json = new org.json.JSONObject();
+		for (Map.Entry<String, Object> entry : map.entrySet()) {
+			String key = entry.getKey();
+			Object value = entry.getValue();
+			json.put(key, value);
+		}
+		return json;
+	}
+
 }
