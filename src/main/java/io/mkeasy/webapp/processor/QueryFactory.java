@@ -1,10 +1,12 @@
 package io.mkeasy.webapp.processor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
+import org.json.simple.JSONArray;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,6 @@ import io.mkeasy.utils.JSONUtil;
 import io.mkeasy.utils.ListUtil;
 import io.mkeasy.utils.MapUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONArray;
 
 @Slf4j
 public class QueryFactory {
@@ -69,9 +70,11 @@ public class QueryFactory {
 
 	// result는 getResult(ns,nsId,result)의 값입니다.
 	// result에서 JSONArray로 변환시켜 줍니다.
+	// net.sf.json.JSONObject에서는 ORACLE.TIMESTAMP 값에 대해 잘못된 파싱을 합니다.
 	public static JSONArray toJSONArray(Object result) {
-		JSONArray json = new JSONArray().fromObject(result);
-		return json;
+		JSONArray arr = new JSONArray();
+		arr.addAll((Collection) result);
+		return arr;
 	}
 
 }

@@ -100,9 +100,10 @@ public class CommandMap implements Serializable {
     }
     
     public void debugParams() {
-    	for(Entry<String, Object> entry : this.getMap().entrySet()) {
-    		log.debug("{}:{}",entry.getKey(), entry.getValue());
-    	}
+//    	for(Entry<String, Object> entry : this.getMap().entrySet()) {
+//    		log.debug("{}:{}",entry.getKey(), entry.getValue());
+//    	}
+    	log.debug("commandMap.params => {}",this.getMap());
     }
     
 }
