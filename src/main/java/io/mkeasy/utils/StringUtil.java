@@ -83,7 +83,7 @@ public class StringUtil {
 		return "N";
 	}
 
-	public static JSONObject toJSON(String strJsonObject) throws Exception {
+	public static org.json.JSONObject toJSON(String strJsonObject) throws Exception {
 		return JSONUtil.toJSON(strJsonObject);
 	}
 	

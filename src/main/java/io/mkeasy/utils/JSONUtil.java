@@ -43,9 +43,9 @@ public class JSONUtil {
 
 	}
 
-	public static JSONObject toJSON(String strJsonObject) throws Exception {
+	public static org.json.JSONObject toJSON(String strJsonObject) throws Exception {
 		try {
-            return new JSONObject().fromObject(strJsonObject);
+            return new org.json.JSONObject(strJsonObject);
 		} catch (Exception e) {
 			throw new Exception("JSONObject Format이 아닙니다. : "+e.getMessage());
 		}
@@ -59,11 +59,12 @@ public class JSONUtil {
 		}
 	}
 
+	// Return org.json.JSONArray or org.json.JSONObject 
 	public static Object toJSON(Object object) throws JSONException {
 		if (object instanceof Iterable) {
-			return new JSONArray().fromObject(object);
+			return JSONUtil.convertListToJson((List<Map<String, Object>>) object);
 		}
-		return new JSONObject().fromObject(object);
+		return new org.json.JSONObject(object);
 	}	
 
 	public static boolean isEmpty(JSONObject object) {

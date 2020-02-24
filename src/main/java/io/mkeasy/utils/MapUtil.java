@@ -87,8 +87,8 @@ public class MapUtil {
 		return result ;
 	}
 	
-	public static JSONObject toJSON(Map<String, Object> map) throws Exception {
-		return JSONUtil.toJSON(map);
+	public static org.json.JSONObject toJSON(Map<String, Object> map) throws Exception {
+		return JSONUtil.convertMapToJson(map);
 	}
 	
 	private static void recursiveObject(Map<String, Object> parent, String parentPath, char div, Object value){
