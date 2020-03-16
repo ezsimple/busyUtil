@@ -58,14 +58,16 @@ public class DefaultLowerCaseMap<K,V> extends LinkedCaseInsensitiveMap implement
 					newVal = newVal.toLowerCase();
 					
 					if(newVal.indexOf("<script")>-1){//스크립트가 있는 경우는 강제 인코딩한다.
-						return (V) Function.escapeXml((String)val);
+						// return (V) Function.escapeXml((String)val);
+						return (V) ((String)val);
 					}
 					
 				}
 
 				return (V) val;
 			}else{//인코딩한다.
-				return (V) Function.escapeXml((String)val);
+				// return (V) Function.escapeXml((String)val);
+				return (V) ((String)val);
 			}
 		}else if(keys.length>1){//포맷을 지정한 경우
 			if (val instanceof Date){

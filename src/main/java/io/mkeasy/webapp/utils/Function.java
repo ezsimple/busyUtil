@@ -10,13 +10,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class Function {
 	static SimpleDateFormat dateFormater = new SimpleDateFormat("yyyyMMdd_HHmmss");
@@ -40,9 +39,9 @@ public class Function {
 		
 		return (new Double(val)).longValue();
 	}
-	public static String escapeXml(String val) {
-		return org.apache.taglibs.standard.functions.Functions.escapeXml(val).replaceAll("\n", "<br>");
-	}
+//	public static String escapeXml(String val) {
+//		return org.apache.taglibs.standard.functions.Functions.escapeXml(val).replaceAll("\n", "<br>");
+//	}
 	public static String concat(String val1, String val2) {
 		return val1+val2;
 	}

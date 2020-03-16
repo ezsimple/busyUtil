@@ -4,12 +4,12 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.el.Expression;
+// import javax.servlet.jsp.PageContext;
+// import javax.servlet.jsp.el.Expression;
 import javax.servlet.jsp.el.FunctionMapper;
-import org.apache.commons.el.ExpressionEvaluatorImpl;
-import org.apache.commons.el.VariableResolverImpl;
-import org.apache.taglibs.standard.lang.jstl.test.PageContextImpl;
+// import org.apache.commons.el.ExpressionEvaluatorImpl;
+// import org.apache.commons.el.VariableResolverImpl;
+// import org.apache.taglibs.standard.lang.jstl.test.PageContextImpl;
 
 @SuppressWarnings("deprecation")
 public class ELUtil {
@@ -45,26 +45,28 @@ public class ELUtil {
 	};
 	public static Object evaluate(String src, Map<String, Object> map) throws Exception{
 		Object value = src;
-		PageContext pc = new PageContextImpl();
+		// PageContext pc = new PageContextImpl();
 			
 		for(String key : map.keySet()){
 			Object data = map.get(key);
 			
-			pc.setAttribute(key.toLowerCase(), data);
+			// pc.setAttribute(key.toLowerCase(), data);
 		}
 		
-		return evaluate(src, pc);
+		// return evaluate(src, pc);
+		return evaluate(src);
 	}
 	
-	public static Object evaluate(String src, PageContext pc) throws Exception{
+	// public static Object evaluate(String src, PageContext pc) throws Exception{
+	public static Object evaluate(String src) throws Exception{
 		Object value = src;
 		
-		VariableResolverImpl varResolver = new VariableResolverImpl(pc); 
-		
-		ExpressionEvaluatorImpl exprEval = new ExpressionEvaluatorImpl();
-	
-	    Expression expression = exprEval.parseExpression(src, String.class, fm);
-	    value = expression.evaluate(varResolver);
+//		VariableResolverImpl varResolver = new VariableResolverImpl(pc); 
+//		
+//		ExpressionEvaluatorImpl exprEval = new ExpressionEvaluatorImpl();
+//	
+//	    Expression expression = exprEval.parseExpression(src, String.class, fm);
+//	    value = expression.evaluate(varResolver);
 	
 		return value;
 	}

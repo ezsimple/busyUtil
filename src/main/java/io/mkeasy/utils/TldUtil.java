@@ -22,9 +22,9 @@ public class TldUtil extends SimpleTagSupport {
     return (new Double(val)).longValue();
   }
   
-  public static String escapeXml(String val) {
-    return org.apache.taglibs.standard.functions.Functions.escapeXml(val);
-  }
+//  public static String escapeXml(String val) {
+//    return org.apache.taglibs.standard.functions.Functions.escapeXml(val);
+//  }
 
   public static boolean empty(Object obj) {
     if(obj==null) {
