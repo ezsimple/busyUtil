@@ -1,6 +1,5 @@
 package io.mkeasy.resolver;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,18 +8,19 @@ import java.util.Set;
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
 
+import io.mkeasy.utils.JSONUtil;
+import io.mkeasy.utils.MapUtil;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class CommandMap implements Serializable {
-
-	private static final long serialVersionUID = -3540606202757918L;
+@EqualsAndHashCode
+public class CommandMap {
 
 	Map<String,Object> map = new HashMap<String,Object>();
 
@@ -104,6 +104,11 @@ public class CommandMap implements Serializable {
 //    		log.debug("{}:{}",entry.getKey(), entry.getValue());
 //    	}
     	log.debug("commandMap.params => {}",this.getMap());
+    }
+    
+    // for CacheKeyGenerator
+    public String toString() {
+		return JSONUtil.convertMapToJson(this.getMap()).toString();
     }
     
 }
