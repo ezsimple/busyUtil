@@ -103,7 +103,15 @@ public class CommandMap {
 //    	for(Entry<String, Object> entry : this.getMap().entrySet()) {
 //    		log.debug("{}:{}",entry.getKey(), entry.getValue());
 //    	}
-    	log.debug("commandMap.params => {}",this.getMap());
+    	// Class<?> caller = sun.reflect.Reflection.getCallerClass(); // java.lang.InternalError: CallerSensitive annotation expected at frame 1
+    	Class<?> source = org.slf4j.helpers.Util.getCallingClass();
+    	StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
+    	StackTraceElement e = stacktrace[2];//maybe this number needs to be corrected
+    	log.debug("{}.{}:{}, params => {}" ,
+    			source.getSimpleName(), // className
+    			e.getMethodName(), // methodName
+    			e.getLineNumber(), 		// sourceLineNumber
+    			this.getMap());			// parameters
     }
     
     // for CacheKeyGenerator
