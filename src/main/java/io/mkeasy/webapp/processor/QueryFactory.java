@@ -1,12 +1,11 @@
 package io.mkeasy.webapp.processor;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
-import org.json.simple.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +41,14 @@ public class QueryFactory {
 		if(ListUtil.isEmpty((List<Map<String, Object>>) result))
 			return MapUtil.EMPTY;
 		return MapUtil.toFlat(((List<Map<String, Object>>) result).get(0));
+	}
+
+	// getResult(ns,nsId,result)의 값을 key명으로 HashMap에 담아 드립니다.
+	public static Map<String, Object> toMap(String key, Object result) {
+		if(StringUtils.isEmpty(key) || result == null) return MapUtil.EMPTY;
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put(key, result);
+		return resultMap;
 	}
 	
 	// result는 getResult(ns,nsId,result)의 값입니다.
