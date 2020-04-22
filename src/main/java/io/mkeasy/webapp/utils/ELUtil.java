@@ -4,6 +4,10 @@ package io.mkeasy.webapp.utils;
 // import java.util.HashMap;
 import java.util.Map;
 
+// import java.lang.reflect.Method;
+// import java.util.HashMap;
+// import java.util.Map;
+
 // import javax.servlet.jsp.PageContext;
 // import javax.servlet.jsp.el.Expression;
 // import javax.servlet.jsp.el.FunctionMapper;
@@ -11,6 +15,7 @@ import java.util.Map;
 // import org.apache.commons.el.VariableResolverImpl;
 // import org.apache.taglibs.standard.lang.jstl.test.PageContextImpl;
 
+// 참고용으로 남겨둡니다.
 @SuppressWarnings("deprecation")
 public class ELUtil {
 
@@ -43,6 +48,7 @@ public class ELUtil {
 //			return functionMap.get(fname);
 //		}
 //	};
+
 	public static Object evaluate(String src, Map<String, Object> map) throws Exception{
 		Object value = src;
 		// PageContext pc = new PageContextImpl();
@@ -71,5 +77,4 @@ public class ELUtil {
 		return value;
 	}
 	
-
 }
