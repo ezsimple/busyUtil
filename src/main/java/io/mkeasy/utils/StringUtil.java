@@ -66,7 +66,7 @@ public class StringUtil {
 		return false;
 	}
 	public static String toYN(String s) {
-		if(s == null || StringUtils.isEmpty(s)) 
+		if(StringUtils.equals(s,"null") || StringUtils.isEmpty(s)) 
 			return "N";
 
 		if(isYN(s))

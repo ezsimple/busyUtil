@@ -19,17 +19,20 @@ public class QueryFactory {
 
 	// Non Transaction Query
 	public static Object execute(String ns, String nsId, CaseInsensitiveMap params) throws Exception {
+		checkNS(ns, nsId);
 		return ProcessorServiceFactory.executeQuery(ns, nsId, params);
 	}
 
 	// Transaction Query
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public static Object executeTx(String ns, String nsId, CaseInsensitiveMap params) throws Exception {
+		checkNS(ns, nsId);
 		return ProcessorServiceFactory.executeQuery(ns, nsId, params);
 	}
 
 	// Get Query Results using CRUD query result
-	public static Object getResult(final String ns, final String nsId, final Object result) {
+	public static Object getResult(final String ns, final String nsId, final Object result) throws Exception {
+		checkNS(ns, nsId);
 		String key = ns+"."+nsId;
 		Object map = ((Map<String, Object>) result).get(key);
 		return map;
@@ -71,8 +74,8 @@ public class QueryFactory {
 
 	// result는 getResult(ns,nsId,result)의 값입니다.
 	// result에서 List를 가져옵니다.
-	public static List<Map<String, Object>> toList(Object result) {
-		return ListUtil.toList((Map<String, Object>) result);
+	public static List toList(Object result) {
+		return ((List) result);
 	}
 
 	// result는 getResult(ns,nsId,result)의 값입니다.
@@ -81,6 +84,13 @@ public class QueryFactory {
 	// DATE, TIMESTAMP 값에 대해 잘못된 파싱을 합니다.
 	public static org.json.JSONArray toJSONArray(Object result) {
 		return JSONUtil.convertListToJson((List<Map<String, Object>>) result);
+	}
+
+	private static void checkNS(String ns, String nsId) throws Exception {
+		if (StringUtils.isEmpty(ns)) 
+			throw new Exception("nameSpace is empty");
+		if (StringUtils.isEmpty(nsId))
+			throw new Exception("nameSpaceId is empty");
 	}
 
 }

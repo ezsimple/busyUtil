@@ -31,7 +31,10 @@ public class ValidUtil extends ValidateUtil {
 	}
 	
 	public static boolean isEmpty(String value) {
-		return StringUtils.isEmpty(value);
+		String param = StringUtils.trim(value);
+		if(StringUtils.equals(param, "null"))
+			return true;
+		return StringUtils.isEmpty(param);
 	}
 
 	public static boolean underMaxLength(String name, String value, int max) {

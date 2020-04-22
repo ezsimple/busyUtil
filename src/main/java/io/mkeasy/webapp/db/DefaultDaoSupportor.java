@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcDaoSupport;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import io.mkeasy.webapp.utils.DefaultMapRowMapper;
-import io.mkeasy.webapp.utils.ELUtil;
+// import io.mkeasy.webapp.utils.ELUtil;
 
 public class DefaultDaoSupportor extends SimpleJdbcDaoSupport{
 
@@ -26,8 +26,8 @@ public class DefaultDaoSupportor extends SimpleJdbcDaoSupport{
 	 */
 	public void executeQuery(String id, String query, boolean isSingleRow, CaseInsensitiveMap params, Map<String, Object> resultSet) throws Exception {
 		Object result = null;
-		System.out.println(query);
-		query = (String)ELUtil.evaluate(query, params);
+		// System.out.println(query);
+		// query = (String)ELUtil.evaluate(query, params);
 		
 		queryLogPrint(query, params);
 

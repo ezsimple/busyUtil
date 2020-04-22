@@ -22,7 +22,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
-import org.springframework.security.util.FieldUtils;
+// import org.springframework.security.util.FieldUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import io.mkeasy.webapp.db.DefaultDaoSupportor;
@@ -203,12 +203,12 @@ public class ProcessorServiceFactory  implements ApplicationContextAware {
 		
 		return daoSupportorMap.get(dataSourceName);
 	}
-	public static String getDbType(String dataSourceName) throws Exception{
-		
-		String url = (String)FieldUtils.getFieldValue(getDaoSupportor(dataSourceName).getDataSource(), "url");
-		
-		return StringUtils.split(url, ':')[1];
-	}
+//	public static String getDbType(String dataSourceName) throws Exception{
+//		
+//		String url = (String)FieldUtils.getFieldValue(getDaoSupportor(dataSourceName).getDataSource(), "url");
+//		
+//		return StringUtils.split(url, ':')[1];
+//	}
 	
 	public static Map<String, Object> executeMainTransaction(List<String> processorList, CaseInsensitiveMap params, String queryPath, String action, String loopId, ServletRequest request, ServletResponse response) throws Exception{
 		ProcessorParam processorParam = new ProcessorParam(loopId);
@@ -319,12 +319,10 @@ public class ProcessorServiceFactory  implements ApplicationContextAware {
 		return params;
 	}	
 	
-	public static Object executeQuery(String queryPath, String action, CaseInsensitiveMap params) throws Exception {
-		//List<String> processorList = new ArrayList<String>();
-		//processorList.add("mybatis");
+	public static Object executeQuery(String ns, String nsId, CaseInsensitiveMap params) throws Exception {
 		ProcessorParam processorParam = new ProcessorParam(null);
-		processorParam.setQueryPath(queryPath);
-		processorParam.setAction(action);
+		processorParam.setQueryPath(ns);
+		processorParam.setAction(nsId);
 		processorParam.setParams(params);
 		//processorParam.setProcessorList(processorList);
 		Object obj = ProcessorServiceFactory.getProcessorService("mybatis").execute(processorParam);
