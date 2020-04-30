@@ -11,7 +11,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
+
+import io.mkeasy.webapp.utils.FileService;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -79,6 +84,10 @@ public class FileUtil extends FileUtils {
         fileChannel.write(byteBuffer);
         fileChannel.close();
 
+	}
+	
+	public static void download(HttpServletRequest request, HttpServletResponse response, String dir, String fileName) throws Exception {
+		FileService.download(request, response, dir, fileName);
 	}
 
 }
