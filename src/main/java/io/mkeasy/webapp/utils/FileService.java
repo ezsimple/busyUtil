@@ -20,10 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 public class FileService {
 	
 	public static void download(HttpServletRequest request, HttpServletResponse response, 
-			String dir, String fileName) throws Exception {
+			File file, String fileName) throws Exception {
 
-		String filePath = dir + "/" + fileName;
-		File file = new File(filePath);
+		if(!file.exists()) return;
 		downloadFile(fileName, file, request, response);
 
 	}

@@ -86,8 +86,8 @@ public class FileUtil extends FileUtils {
 
 	}
 	
-	public static void download(HttpServletRequest request, HttpServletResponse response, String dir, String fileName) throws Exception {
-		FileService.download(request, response, dir, fileName);
+	public static void download(HttpServletRequest request, HttpServletResponse response, File file, String fileName) throws Exception {
+		FileService.download(request, response, file, fileName);
 	}
 
 }
