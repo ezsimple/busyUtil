@@ -32,7 +32,7 @@ public class CommandMap {
     // 주의 : trim 이 추가됨
     public String getParam(String key){
     	Object obj = this.get(key);
-    	if(obj == null) return null;
+    	if(obj == null) return "";
     	if(obj instanceof Integer 
     			|| obj instanceof Double
     			|| obj instanceof String) {

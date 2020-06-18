@@ -174,7 +174,28 @@ class ValidateUtil {
 		Pattern p = Pattern.compile("^[0-9]*$");
 		Matcher m = p.matcher(s);
 		boolean chk = m.matches();
-		log.debug("{} : {}({})", "ValidDecimalCallBack" , s, chk );
+		// log.debug("{} : {}({})", "ValidDecimalCallBack" , s, chk );
+		return chk;
+	}
+
+	protected static boolean _floatFormat(String s) {
+		if(StringUtils.isEmpty(s))
+			return false;
+		Pattern p = Pattern.compile("^[0-9]*\\.[E0-9]+$"); // 지수식 검사 추가 
+		Matcher m = p.matcher(s);
+		boolean chk = m.matches();
+		// log.debug("{} : {}({})", "ValidFloatCallBack" , s, chk );
+		return chk;
+	}
+
+	// 소수점이 *.0 로 끝나는 포맷
+	protected static boolean _zeroEndFormat(String s) {
+		if(StringUtils.isEmpty(s))
+			return false;
+		Pattern p = Pattern.compile("^[0-9]+\\.0$");
+		Matcher m = p.matcher(s);
+		boolean chk = m.matches();
+		// log.debug("{} : {}({})", "ValidZeroEndCallBack" , s, chk );
 		return chk;
 	}
 
