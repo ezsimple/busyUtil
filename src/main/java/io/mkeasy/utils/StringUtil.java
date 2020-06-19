@@ -5,8 +5,10 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.ObjectUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONObject;
 
+@Slf4j
 public class StringUtil {
 	public static String trim(String str) {
 		return StringUtils.trim(str);
@@ -90,6 +92,20 @@ public class StringUtil {
 	// 널 일 경우 공백으로 채움.
 	public static String emptyIfNull(String str) {
 		return String.valueOf(ObjectUtil.emptyIfNull(str));
+	}
+	
+	// 소숫점 제거하기 - 정수만 가져오기
+	public static int toInt(String str) {
+        return (int) Double.parseDouble(str);
+	}
+	
+	// 소숫점 몇번째 자리 지정하기 - 반올림
+	public static String toFloat(String str, int decPlaces) {
+		if(decPlaces<0) return "-";
+        String format = "%."+decPlaces+"f";
+        String value = String.format(format,Double.parseDouble(str));
+        log.debug("{} => {}", str, value);
+        return value;
 	}
 
 }

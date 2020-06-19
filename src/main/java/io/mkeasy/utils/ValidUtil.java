@@ -122,6 +122,14 @@ public class ValidUtil extends ValidateUtil {
 		return _decimalFormat(value);
 	}
 
+	public static boolean isFloatFormat(String value) {
+		return _floatFormat(value);
+	}
+
+	public static boolean isZeroEndFormat(String value) {
+		return _zeroEndFormat(value);
+	}
+
 	public static boolean isAlphaNumericFormat(String value) {
 		return _alphaNumericFormat(value);
 	}

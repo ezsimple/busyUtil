@@ -157,6 +157,16 @@ public class JSONUtil {
 		return toMap(object.getJSONObject(key));
 	}
 
+	public static Map<String, Object> toMap(org.json.JSONObject object) throws JSONException {
+		Map<String, Object> map = new HashMap();
+		Iterator keys = object.keys();
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+			map.put(key, fromJson(object.get(key)));
+		}
+		return map;
+	}
+
 	public static Map<String, Object> toMap(JSONObject object) throws JSONException {
 		Map<String, Object> map = new HashMap();
 		Iterator keys = object.keys();

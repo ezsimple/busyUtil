@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
 
+import io.mkeasy.utils.EgovMap;
 import io.mkeasy.utils.JSONUtil;
 import io.mkeasy.utils.MapUtil;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class CommandMap {
     // 주의 : trim 이 추가됨
     public String getParam(String key){
     	Object obj = this.get(key);
-    	if(obj == null) return null;
+    	if(obj == null) return "";
     	if(obj instanceof Integer 
     			|| obj instanceof Double
     			|| obj instanceof String) {
@@ -85,6 +86,25 @@ public class CommandMap {
 		String key = null;
 		String[] values = null;
 		CaseInsensitiveMap map = new CaseInsensitiveMap();
+    	for(Entry<String, Object> entry : this.getMap().entrySet()) {
+    		key = entry.getKey();
+    		Object o = entry.getValue();
+    		if(o instanceof String) {
+                map.put(key, o);
+    		}
+    		if(o instanceof String[]) {
+                values = (String[]) entry.getValue();
+                map.put(key, (values.length>1?values:values[0]));
+    		}
+    	}
+    	return map;
+    }
+    
+    // for CamelCase
+    public EgovMap getEgovMap() {
+		String key = null;
+		String[] values = null;
+		EgovMap map = new EgovMap();
     	for(Entry<String, Object> entry : this.getMap().entrySet()) {
     		key = entry.getKey();
     		Object o = entry.getValue();
