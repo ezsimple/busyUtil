@@ -140,7 +140,7 @@ public class DateUtil {
 	public static int nowYear() {
 		return newCalendar().get(Calendar.YEAR);
 	}
-
+	
 	/**
 	 * 현재 월을 구한다
 	 * @Method : nowYear()

@@ -70,13 +70,12 @@ public class ProcessorServiceFactory  implements ApplicationContextAware {
 	public static void setMyBatisMappedStatementInfoMap(Map<String, List<MappedStatementInfo>> myBatisMappedStatementInfoMap) {
 		ProcessorServiceFactory.myBatisMappedStatementInfoMap = myBatisMappedStatementInfoMap;
 	}
-	public static Object getCache(String key) {
-		return cacheService.get(key);
-	}
-	public static void setCache(String key, Object data) {
-		
-		cacheService.put(key, data);
-	}
+//	public static Object getCache(String key) {
+//		return cacheService.get(key);
+//	}
+//	public static void setCache(String key, Object data) {
+//		cacheService.put(key, data);
+//	}
 	public static void setRsMeta(String id, ResultSet resultSet, Configuration configuration) throws SQLException{
 		if(rsMeta.containsKey(id)){
 			return;

@@ -134,6 +134,10 @@ public class ValidUtil extends ValidateUtil {
 		return _alphaNumericFormat(value);
 	}
 
+	public static boolean isNormalCharFormat(String value) {
+		return _normalCharFormat(value);
+	}
+
 	/*
 	public static JSONObject idUnique(String q) throws Exception {
 		boolean ret = _idUnique(q);

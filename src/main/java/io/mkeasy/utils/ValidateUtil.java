@@ -149,6 +149,14 @@ class ValidateUtil {
 		return chk;
 	}
 
+	protected static boolean _containsAlphabetFormat(String str) {
+		// 알파벳 검출
+		Pattern p = Pattern.compile(".*[a-zA-Z]+.*"); 
+		Matcher m = p.matcher(str);
+		boolean chk = m.matches();
+		return (chk);
+	}
+
 	protected static boolean _passwordFormat(String password) {
 		if(StringUtils.isEmpty(password))
 			return false;
@@ -227,6 +235,20 @@ class ValidateUtil {
 		Matcher m = p.matcher(s);
 		boolean chk = m.matches();
 		log.debug("{} : {}({})", "ValidAlphaNumericCallBack" , s, chk );
+		return chk;
+	}
+	
+    // ---------------------------------------------
+    // 숫자, 알파벳, 점, 언더바(_) ,공백,하이픈(-) 허용 
+    // - 다국어 아이디용
+    // ---------------------------------------------
+	protected static boolean _normalCharFormat(String s) {
+		if(StringUtils.isEmpty(s))
+			return false;
+		Pattern p = Pattern.compile("^[a-zA-Z0-9_\\- \\.]+$");
+		Matcher m = p.matcher(s);
+		boolean chk = m.matches();
+		log.debug("{} : {}({})", "ValidNormalCharCallBack" , s, chk );
 		return chk;
 	}
 	
