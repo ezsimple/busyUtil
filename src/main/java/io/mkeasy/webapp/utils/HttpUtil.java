@@ -15,11 +15,9 @@ import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.protocol.SSLProtocolSocketFactory;
 import org.apache.commons.lang.StringUtils;
 
-public class HttpUtils {
+public class HttpUtil {
 	private static final int BUFFER_SIZE = 4 * 1024;
 
 	public static String getString(String url, Map<String, Object> parameterMap)throws Exception {
@@ -137,7 +135,7 @@ public class HttpUtils {
 		//param.put("dataType", "ismart");
 		param.put("dataType", "smartmeter");
 		param.put("dateStr", "20150115");
-		String html = HttpUtils.getString(path, param);
+		String html = HttpUtil.getString(path, param);
 		System.out.println(html);
 	}
 }

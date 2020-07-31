@@ -95,14 +95,18 @@ public class AgentUtil {
 	}
 
 	public static Map<String, String> getAgentDetail(HttpServletRequest request) {
+
+		if(request == null) 
+			return null;
+
 		Map<String, String> agentDetail = new HashMap<>();
 		agentDetail.put("browser", getBrowser(request).toString());
-		agentDetail.put("browserType", getBrowserType(request).toString());
-		agentDetail.put("browserVersion", getBrowserVersion(request).toString());
-		agentDetail.put("renderingEngine", getRenderingEngine(request).toString());
-		agentDetail.put("os", getUserOs(request).toString());
-		agentDetail.put("deviceType", getDeviceType(request).toString());
-		agentDetail.put("manufacturer", getManufacturer(request).toString());
+		// agentDetail.put("browserType", getBrowserType(request).toString());
+		// agentDetail.put("browserVersion", getBrowserVersion(request).toString());
+		// agentDetail.put("renderingEngine", getRenderingEngine(request).toString());
+		// agentDetail.put("os", getUserOs(request).toString());
+		// agentDetail.put("deviceType", getDeviceType(request).toString());
+		// agentDetail.put("manufacturer", getManufacturer(request).toString());
 
 		return agentDetail;
 	}

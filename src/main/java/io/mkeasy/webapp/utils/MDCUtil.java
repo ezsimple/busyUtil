@@ -1,13 +1,12 @@
-package io.mkeasy.utils;
+package io.mkeasy.webapp.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
+
+import org.json.JSONObject;
 import org.slf4j.MDC;
 import org.slf4j.spi.MDCAdapter;
 
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Map;
 
 @Slf4j
 public class MDCUtil {
@@ -30,7 +29,8 @@ public class MDCUtil {
 	public static void setJsonValue(String key, Object value) {
 		try {
 			if (value != null) {
-				String json = JSONUtil.toJson(value);
+				JSONObject o = new JSONObject(value);
+				String json = o.toString();
 				mdc.put(key, json);
 			}
 		} catch (Exception e) {
@@ -51,5 +51,4 @@ public class MDCUtil {
 			set(REQUEST_URI_MDC, (String) errorAttribute.get("path"));
 		}
 	}
-
 }

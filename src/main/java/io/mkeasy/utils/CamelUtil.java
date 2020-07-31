@@ -1,5 +1,7 @@
 package io.mkeasy.utils;
 
+import org.codehaus.plexus.util.StringUtils;
+
 /*
  * Copyright 2008-2009 MOPAS(Ministry of Public Administration and Security).
  *
@@ -26,7 +28,10 @@ public class CamelUtil {
      *        - '_' 가 포함된 변수명
      * @return Camel 표기법 변수명
      */
-    public static String toCamelCase(String underScore) {
+    public static String toCamelCase(final String str) {
+    	
+    	// 커스텀 변환하고 자는 char를 _ 로 변환
+    	String underScore = str.replaceAll("[ .-\\t]", "_");
 
         // '_' 가 나타나지 않으면 이미 camel case 로 가정함.
         // 단 첫째문자가 대문자이면 camel case 변환 (전체를 소문자로) 처리가

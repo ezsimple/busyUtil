@@ -3,10 +3,10 @@ package io.mkeasy.utils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.ObjectUtils;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 
 @Slf4j
 public class StringUtil {
@@ -106,6 +106,21 @@ public class StringUtil {
         String value = String.format(format,Double.parseDouble(str));
         log.debug("{} => {}", str, value);
         return value;
+	}
+
+    /**
+     * underscore ('_') 가 포함되어 있는 문자열을 Camel Case 
+     * - 낙타등 표기법 - 단어의 변경시에 대문자로 시작하는 형태. 시작은 소문자)
+     * 로 변환해주는 Utility 메서드
+     * 
+     * 커스텀 CamelCase는 CamelUtil.toCamelCase() 사용
+     * 
+     * @param underScore 
+     *        '_' 가 포함된 변수명
+     * @return Camel 표기법 변수명
+     */
+	public static String toCamelCase(String underScore) {
+		return JdbcUtils.convertUnderscoreNameToPropertyName(underScore);
 	}
 
 }

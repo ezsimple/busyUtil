@@ -153,6 +153,11 @@ public class JSONUtil {
 		return object.names() == null;
 	}
 
+	public static boolean isEmpty(org.json.JSONObject object) {
+		if(object == null) return true;
+		return object.names() == null;
+	}
+
 	public static Map<String, Object> getMap(JSONObject object, String key) throws JSONException {
 		return toMap(object.getJSONObject(key));
 	}

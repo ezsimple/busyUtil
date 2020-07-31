@@ -80,6 +80,11 @@ public class DateUtil {
 		String formated_date = sdf.format(getDate(date));
 		return formated_date;
 	}
+	public static String getFormatDate(Date date, String format) {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		String formated_date = sdf.format(date);
+		return formated_date;
+	}
 
 	public static boolean isDateValid(String date) {
 		try {
@@ -187,7 +192,7 @@ public class DateUtil {
 	public static Date getTZNow(String timezone) {
 		return getTZDate(getNow(), getTimezone());
 	}
-
+	
 	// 사용가능한 타임존 목록을 가져옵니다.
 	public static List<String> getTimezones() {
 		List<String> timeZones = new ArrayList<String>();

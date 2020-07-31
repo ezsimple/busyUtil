@@ -1,4 +1,4 @@
-package io.mkeasy.utils;
+package io.mkeasy.webapp.utils;
 
 import org.apache.commons.io.IOUtils;
 

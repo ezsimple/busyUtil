@@ -27,6 +27,11 @@ import net.sf.json.JSONObject;
 @Slf4j
 public class NetUtil {
 
+	public static String getIp() throws UnknownHostException {
+		InetAddress ip = InetAddress.getLocalHost();
+		return ip.getHostAddress();
+	}
+
 	public static String getMAC() throws UnknownHostException, SocketException {
 		InetAddress ip = InetAddress.getLocalHost();
 		NetworkInterface network = NetworkInterface.getByInetAddress(ip);
@@ -36,7 +41,7 @@ public class NetUtil {
 			sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? ":" : "").toUpperCase());
 		}
 		String macAddress = sb.toString();
-		log.debug("IP : {}, MAC : {}",ip.getHostAddress(), macAddress);
+		// log.debug("IP : {}, MAC : {}",ip.getHostAddress(), macAddress);
 		return macAddress;
 	}
 
@@ -92,27 +97,11 @@ public class NetUtil {
 	public static String getClientIP() {
 		HttpServletRequest req = getHttpServletRequest();
 		String ip = req.getHeader("X-FORWARDED-FOR");
-		// log.info("TEST : X-FORWARDED-FOR : "+ip);
-		if (ip == null) {
-			ip = req.getHeader("Proxy-Client-IP");
-            // log.info("TEST : Proxy-Client-IP : "+ip);
-		}
-		if (ip == null) {
-			ip = req.getHeader("WL-Proxy-Client-IP");
-			// log.info("TEST : WL-Proxy-Client-IP : "+ip);
-		}
-		if (ip == null) {
-			ip = req.getHeader("HTTP_CLIENT_IP");
-			// log.info("TEST : HTTP_CLIENT_IP : "+ip);
-		}
-		if (ip == null) {
-			ip = req.getHeader("HTTP_X_FORWARDED_FOR");
-			// log.info("TEST : HTTP_X_FORWARDED_FOR : "+ip);
-		}
-		if (ip == null) {
-			ip = req.getRemoteAddr();
-			// log.info("TEST : getRemoteAddr : "+ip);
-		}
+		if (ip == null) ip = req.getHeader("Proxy-Client-IP");
+		if (ip == null) ip = req.getHeader("WL-Proxy-Client-IP");
+		if (ip == null) ip = req.getHeader("HTTP_CLIENT_IP");
+		if (ip == null) ip = req.getHeader("HTTP_X_FORWARDED_FOR");
+		if (ip == null) ip = req.getRemoteAddr();
 		return ip;
 	}
 
