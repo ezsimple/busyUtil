@@ -3,6 +3,9 @@ package io.mkeasy.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -222,7 +225,11 @@ public class DateUtil {
 
 		return parsedDate;
 	}
-
+	
+	// format example : 2015-04-14T11:07:36.639Z
+	public static String getISODateTime() {
+		return ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
+	}
 
 	public static void main(String[] args) {
 		getDate("");

@@ -36,14 +36,14 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class PropertiesUtil{
 	
-	@Resource(name="constant")
-	Properties constant; // do not support static 
-	
-    public Properties getConstant() {
-    	return this.constant;
-    }
-    
-    public String getConstantProperty(String key) {
-    	return getConstant().getProperty(key);
-    }
+//	@Resource(name="constant")
+//	Properties constant; // do not support static 
+//	
+//    public Properties getConstant() {
+//    	return this.constant;
+//    }
+//    
+//    public String getConstantProperty(String key) {
+//    	return getConstant().getProperty(key);
+//    }
 }

@@ -2,8 +2,12 @@ package io.mkeasy.webapp.processor;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +26,14 @@ public class EsFactory {
 	@Autowired
 	WebUtil webUtil;
 
-	public String getEsQuery(String path, String fileName) throws IOException {
-		final String webRoot = webUtil.getWebRoot();
+	@Autowired
+	ServletContext context;
 
-		String queryPath = webRoot + "/WEB-INF/sql/elastic";
+	public String getEsQuery(String path, String fileName) throws IOException {
+		String queryPath = "/WEB-INF/sql/elastic";
         queryPath += "/"+path+"/"+fileName+".json";
-        
-        String jsonQuery = FileUtils.readFileToString(new File(queryPath), "utf-8");
+		InputStream is = context.getResourceAsStream(queryPath);
+		String jsonQuery = IOUtils.toString(is, "UTF-8"); 
 		return jsonQuery;
 	}
 
