@@ -102,6 +102,8 @@ public class NetUtil {
 		if (ip == null) ip = req.getHeader("HTTP_CLIENT_IP");
 		if (ip == null) ip = req.getHeader("HTTP_X_FORWARDED_FOR");
 		if (ip == null) ip = req.getRemoteAddr();
+		if(StringUtils.equals(ip, "0:0:0:0:0:0:0:1"))
+			ip = "127.0.0.1";
 		return ip;
 	}
 
