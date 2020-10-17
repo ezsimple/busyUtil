@@ -102,7 +102,8 @@ public class NetUtil {
 		if (ip == null) ip = req.getHeader("HTTP_CLIENT_IP");
 		if (ip == null) ip = req.getHeader("HTTP_X_FORWARDED_FOR");
 		if (ip == null) ip = req.getRemoteAddr();
-		if(StringUtils.equals(ip, "0:0:0:0:0:0:0:1"))
+		if(StringUtils.equals(ip, "0:0:0:0:0:0:0:1")
+				||StringUtils.equals(ip, "::1"))
 			ip = "127.0.0.1";
 		return ip;
 	}
@@ -165,6 +166,18 @@ public class NetUtil {
 
 		return hostname;
 	}
+	
+	// InetAddress 객체 생성을 위해 필요.
+	public static byte[] ip2bytes(String ip) {
+		byte[] bytesIp;
+		try {
+			bytesIp = InetAddress.getByName(ip).getAddress();
+		} catch (UnknownHostException e) {
+			bytesIp = new byte[4];  // fall back to invalid 0.0.0.0 address
+		}
+		return bytesIp;
+	}
+
 
 	@Test
 	public void Test() throws UnknownHostException, SocketException {
