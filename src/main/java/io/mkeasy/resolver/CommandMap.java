@@ -1,9 +1,9 @@
 package io.mkeasy.resolver;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang.StringUtils;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode
 public class CommandMap {
 
-	Map<String,Object> map = new HashMap<String,Object>();
+	Map<String,Object> map = new ConcurrentHashMap<String,Object>();
 
     public Object get(String key){
         return map.get(key);
