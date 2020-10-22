@@ -14,10 +14,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.mkeasy.resolver.CommandMap;
-import io.mkeasy.utils.ListUtil;
+import io.mkeasy.utils.MapUtil;
 import io.mkeasy.utils.StringUtil;
 import io.mkeasy.utils.excel.ExcelRead;
 import io.mkeasy.utils.excel.ExcelReadOption;
@@ -32,18 +31,40 @@ public class ExcelFactory {
     @Autowired
     FileFactory fileFactory;
 
-	public List<Map<String, String>> upload(MultipartFile excelfile, ModelMap model, CommandMap commandMap) throws Exception {
+	public Map<String, String> getHeader(String filePath) throws Exception {
 
-		if(excelfile==null) {
-			log.error("#ERROR# excelImport file is null");
-			return ListUtil.EMPTY;
-		}
-
-		String filePath = fileFactory.upload(excelfile);
-        String origFileName = excelfile.getOriginalFilename();
-        String ext = FilenameUtils.getExtension(origFileName);
+		if(filePath == null)
+			throw new Exception(filePath +"가 존재하지 않습니다.");
 
 		File file = new File(filePath);
+		String ext = FilenameUtils.getExtension(file.getName());
+		File tempFile = File.createTempFile("temp-","."+ext); 
+		tempFile.deleteOnExit();
+
+		FileUtils.copyFile(file, tempFile);
+		
+		ExcelReadOption ro = new ExcelReadOption();
+		ro.setFilePath(tempFile.getAbsolutePath());
+		
+		String[] cols = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"
+				, "M", "N" , "O", "P", "Q", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+		ro.setOutputColumns(cols);
+		ro.setStartRow(1); // skip first rows (skip titles)
+
+		List<Map<String, String>> result = ExcelRead.read(ro);
+
+		FileUtils.deleteQuietly(tempFile);
+		
+		return result!=null?result.get(0):MapUtil.EMPTY;
+	}
+
+	public List<Map<String, String>> upload(String filePath, ModelMap model, CommandMap commandMap) throws Exception {
+
+		if(filePath == null)
+			throw new Exception(filePath +"가 존재하지 않습니다.");
+
+		File file = new File(filePath);
+		String ext = FilenameUtils.getExtension(file.getName());
 		File tempFile = File.createTempFile("temp-","."+ext); 
 		tempFile.deleteOnExit();
 
