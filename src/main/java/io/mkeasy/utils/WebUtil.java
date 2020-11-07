@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,19 +20,28 @@ public class WebUtil {
 	@Resource 
 	AbstractApplicationContext ctx;
 
-
 	private String WEB_ROOT = null;
+	private String RESOURCE_ROOT = null;
 	
 	public String getWebRoot() throws IOException {
-
 		if (WEB_ROOT!=null)
 			return this.WEB_ROOT;
 
 		org.springframework.core.io.Resource resource = ctx.getResource("/");
 		File f = resource.getFile();
 		WEB_ROOT = f.getPath();
-
 		return WEB_ROOT;
+	}
+	
+	public String getResourceRoot() throws IOException {
+		if (RESOURCE_ROOT!=null)
+			return this.RESOURCE_ROOT;
+
+		DefaultResourceLoader defaultResourceLoader = new DefaultResourceLoader();
+		org.springframework.core.io.Resource resource = defaultResourceLoader.getResource("/");
+		File f = resource.getFile();
+		RESOURCE_ROOT = f.getPath();
+		return RESOURCE_ROOT;
 	}
 	
 	@Autowired

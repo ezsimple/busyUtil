@@ -11,6 +11,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 엑셀 파일을 읽어 온다.
  * <pre>
@@ -28,14 +30,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 </pre>
  * @author Minchang Jang (mc.jang@hucloud.co.kr)
  */
+@Slf4j
 public class ExcelRead {
 
 	/**
 	 * 엑셀 파일을 읽어옴
 	 * @param readOption
 	 * @return
+	 * @throws Exception 
 	 */
-	public static List<Map<String, String>> read(ExcelReadOption readOption) {
+	public static List<Map<String, String>> read(ExcelReadOption readOption) throws Exception {
 
 		Workbook wb = ReadFileType.getWorkbook(readOption.getFilePath());
 		Sheet sheet = wb.getSheetAt(0);
@@ -48,32 +52,24 @@ public class ExcelRead {
 
 		String cellName = "";
 
-		Map<String, String> map = null;
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        List<String> outputColumns = readOption.getOutputColumns();
 
 		for(int rowIndex = readOption.getStartRow() - 1; rowIndex < numOfRows; rowIndex++) {
 
 			row = sheet.getRow(rowIndex);
-
 			if(row != null) {
-				numOfCells = row.getPhysicalNumberOfCells();
+				// numOfCells = row.getPhysicalNumberOfCells(); // bug
+				numOfCells = row.getLastCellNum();
 
-				map = new HashMap<String, String>();
-
+                Map<String, String> map = new HashMap<String, String>();
 				for(int cellIndex = 0; cellIndex < numOfCells; cellIndex++) {
-
 					cell = row.getCell(cellIndex);
 					cellName = CellRef.getName(cell, cellIndex);
-
-					if( !readOption.getOutputColumns().contains(cellName) ) {
-						continue;
-					}
-
+					if(!outputColumns.contains(cellName)) continue;
 					map.put(cellName, CellRef.getValue(cell));
 				}
-
 				result.add(map);
-
 			}
 
 		}
