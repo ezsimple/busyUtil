@@ -35,6 +35,14 @@ public class QueryFactory {
 		return ProcessorServiceFactory.executeQuery(ns, nsId, params);
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public Object executeAll(String ns, String nsId, List list) throws Exception {
+		checkNS(ns, nsId);
+		if(list==null)
+			throw new Exception("List parameters is null");
+		return executeBulk(ns, nsId, list);
+	}
+
 	// Get Query Results using CRUD query result
 	public static Object getResult(final String ns, final String nsId, final Object result) throws Exception {
 		checkNS(ns, nsId);
@@ -102,12 +110,7 @@ public class QueryFactory {
 	@Autowired
 	SqlSessionTemplate sqlSessionTemplate;
 
-	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public Object executeAll(String ns, String nsId, List list) throws Exception {
-		checkNS(ns, nsId);
-		if(list==null)
-			throw new Exception("List parameters is null");
-
+	private Object executeBulk(String ns, String nsId, List list) throws Exception {
 		final String returnId = ns+"."+nsId;
 
 		SqlCommandType sqlCommandType = getSqlCommandType(ns, nsId);
