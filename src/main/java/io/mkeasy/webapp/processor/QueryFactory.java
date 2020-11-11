@@ -1,15 +1,11 @@
 package io.mkeasy.webapp.processor;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.mapping.SqlCommandType;
-import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,52 +102,11 @@ public class QueryFactory {
 			throw new Exception("nameSpaceId is empty");
 	}
 	
-	
 	@Autowired
-	SqlSessionTemplate sqlSessionTemplate;
+	MyBatisProcessor myBatisProcessor;
 
 	private Object executeBulk(String ns, String nsId, List list) throws Exception {
-		final String returnId = ns+"."+nsId;
-
-		SqlCommandType sqlCommandType = getSqlCommandType(ns, nsId);
-		
-		if (sqlCommandType == SqlCommandType.SELECT) {
-			return sqlSessionTemplate.selectList(returnId, list);
-		}
-
-		if (sqlCommandType == SqlCommandType.INSERT) {
-			return sqlSessionTemplate.insert(returnId, list);
-		}
-
-		if (sqlCommandType == SqlCommandType.UPDATE) {
-			return sqlSessionTemplate.update(returnId, list);
-		}
-
-		if (sqlCommandType == SqlCommandType.DELETE) {
-			return sqlSessionTemplate.delete(returnId, list);
-		}
-
-		if(sqlCommandType == SqlCommandType.UNKNOWN) {
-			throw new Exception("queryId=" + returnId + " does not exist");
-		}
-
-		throw new Exception(sqlCommandType + " does not exist");
-	}
-
-	private SqlCommandType getSqlCommandType(String ns, String nsId) throws Exception {
-
-		if(sqlSessionTemplate==null)
-			throw new Exception("sqlSessionTemplate is null");
-
-		String returnId = ns + "." + nsId;
-		Collection<String> collection = sqlSessionTemplate.getConfiguration().getMappedStatementNames();
-
-		if (!collection.contains(returnId))
-			throw new Exception(returnId+" does not exist in MappedStatementNames");
-		
-		MappedStatement mappedStatement = null;
-		mappedStatement = sqlSessionTemplate.getConfiguration().getMappedStatement(returnId);
-        return mappedStatement.getSqlCommandType();
+		return myBatisProcessor.execute(ns, nsId, list);
 	}
 
 }

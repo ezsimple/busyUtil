@@ -67,6 +67,34 @@ public class MyBatisProcessor implements ProcessorService{
 		
 	}
 
+	public Object execute(String ns, String nsId, List list) throws Exception {
+
+		final String returnId = ns+"."+nsId;
+		SqlCommandType sqlCommandType = getSqlCommandType(ns, nsId);
+		
+		if (sqlCommandType == SqlCommandType.SELECT) {
+			return sqlSession.selectList(returnId, list);
+		}
+
+		if (sqlCommandType == SqlCommandType.INSERT) {
+			return sqlSession.insert(returnId, list);
+		}
+
+		if (sqlCommandType == SqlCommandType.UPDATE) {
+			return sqlSession.update(returnId, list);
+		}
+
+		if (sqlCommandType == SqlCommandType.DELETE) {
+			return sqlSession.delete(returnId, list);
+		}
+
+		if(sqlCommandType == SqlCommandType.UNKNOWN) {
+			throw new Exception("queryId=" + returnId + " does not exist");
+		}
+
+		throw new Exception(sqlCommandType + " does not exist");
+	}
+
 	class MappedStatementInfo{
 		boolean isSingleRow = false;
 		String id;
