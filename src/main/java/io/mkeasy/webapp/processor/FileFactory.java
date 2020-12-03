@@ -117,8 +117,8 @@ public class FileFactory {
 			InputStream is = file.getInputStream();
 			String saveFileName = path.toString();
 
-			log.warn("origFileName : {}, saveFileName : {}, fileId : {}, len : {}"
-				,origFileName, saveFileName, fileId, fileId.length());
+//			log.warn("origFileName : {}, saveFileName : {}, fileId : {}, len : {}"
+//				,origFileName, saveFileName, fileId, fileId.length());
 
 			File tmp = File.createTempFile(fileId, ".tmp");
 			FileUtils.copyInputStreamToFile(is, tmp);
@@ -127,7 +127,7 @@ public class FileFactory {
 
 			fileIds.add(dstFile.getAbsolutePath());
 			
-			log.debug("파일 저장 완료 : {}",dstFile.getAbsolutePath());
+			// log.debug("파일 저장 완료 : {}",dstFile.getAbsolutePath());
 		}
 		return fileIds;
 	}

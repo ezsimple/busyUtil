@@ -1,5 +1,6 @@
 package io.mkeasy.utils;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -8,11 +9,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 // import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
+import org.apache.commons.lang.SerializationUtils;
 
 import lombok.extern.slf4j.Slf4j;
-import net.sf.json.JSONObject;
 
 @Slf4j
 public class MapUtil {
@@ -119,6 +122,14 @@ public class MapUtil {
 				.stream()
 				.filter(e -> e.getKey().equalsIgnoreCase(key))
 				.findFirst();
+	}
+	 
+	// request.getParameterMap() 복사용
+	public static Map<String, String[]> clone(Map<String, String[]> origMap) {
+		Set<Entry<String, String[]>> entries = origMap.entrySet();
+		HashMap<String, String[]> cloneMap = (HashMap<String, String[]>) entries.stream()
+				  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+		return cloneMap;
 	}
 	
 }

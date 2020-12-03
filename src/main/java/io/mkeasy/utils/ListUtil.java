@@ -6,12 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.util.ObjectUtils;
 
 public class ListUtil extends ListUtils{
 
@@ -39,6 +35,10 @@ public class ListUtil extends ListUtils{
 	
 	public final static <T> List<T> toList(T... objs){
 		return Arrays.asList(objs) ;
+	}
+
+	public final static List<Map<String, Object>> toListMap(List<?> list){
+        return (List<Map<String, Object>>) (List<?>) list;
 	}
 	
 	public final static <T> List<T> syncList(T... objs){

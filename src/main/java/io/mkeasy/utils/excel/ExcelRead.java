@@ -43,29 +43,41 @@ public class ExcelRead {
 
 		Workbook wb = ReadFileType.getWorkbook(readOption.getFilePath());
 		Sheet sheet = wb.getSheetAt(0);
-
 		int numOfRows = sheet.getPhysicalNumberOfRows();
-		int numOfCells = 0;
 
-		Row row = null;
-		Cell cell = null;
+		List<Map<String, String>> result = readExcel(readOption, sheet, numOfRows);
+		return result;
 
-		String cellName = "";
+	}
 
+	public static List<Map<String, String>> readHeader(ExcelReadOption readOption) throws Exception {
+
+		Workbook wb = ReadFileType.getWorkbook(readOption.getFilePath());
+		Sheet sheet = wb.getSheetAt(0);
+
+		int startRow  = readOption.getStartRow();
+		int numOfRows = startRow + 1;
+
+		List<Map<String, String>> result = readExcel(readOption, sheet, numOfRows);
+		return result;
+
+	}
+
+	private static List<Map<String, String>> readExcel(ExcelReadOption readOption, Sheet sheet, int numOfRows)
+			throws Exception {
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         List<String> outputColumns = readOption.getOutputColumns();
-
 		for(int rowIndex = readOption.getStartRow() - 1; rowIndex < numOfRows; rowIndex++) {
 
-			row = sheet.getRow(rowIndex);
+            Row row = sheet.getRow(rowIndex);
 			if(row != null) {
 				// numOfCells = row.getPhysicalNumberOfCells(); // bug
-				numOfCells = row.getLastCellNum();
+				int numOfCells = row.getLastCellNum();
 
                 Map<String, String> map = new HashMap<String, String>();
 				for(int cellIndex = 0; cellIndex < numOfCells; cellIndex++) {
-					cell = row.getCell(cellIndex);
-					cellName = CellRef.getName(cell, cellIndex);
+                    Cell cell = row.getCell(cellIndex);
+                    String cellName = CellRef.getName(cell, cellIndex);
 					if(!outputColumns.contains(cellName)) continue;
 					map.put(cellName, CellRef.getValue(cell));
 				}
@@ -73,9 +85,7 @@ public class ExcelRead {
 			}
 
 		}
-
 		return result;
-
 	}
 
 }
