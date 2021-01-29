@@ -21,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @EqualsAndHashCode
 public class CommandMap {
 
-	Map<String,Object> map = new ConcurrentHashMap<String,Object>();
+	Map<String,Object> parameterMap = new ConcurrentHashMap<String,Object>();
 
     public Object get(String key){
-        return map.get(key);
+        return parameterMap.get(key);
     }
     
     // 단일 파라미터의 경우
@@ -41,43 +41,43 @@ public class CommandMap {
     }
 
     public void put(String key, Object value){
-        map.put(key, value);
+        parameterMap.put(key, value);
     }
 
     public Object remove(String key){
-        return map.remove(key);
+        return parameterMap.remove(key);
     }
 
     public boolean containsKey(String key){
-        return map.containsKey(key);
+        return parameterMap.containsKey(key);
     }
 
     public boolean containsValue(Object value){
-        return map.containsValue(value);
+        return parameterMap.containsValue(value);
     }
 
     public void clear(){
-        map.clear();
+        parameterMap.clear();
     }
 
     public Set<Entry<String, Object>> entrySet(){
-        return map.entrySet();
+        return parameterMap.entrySet();
     }
 
     public Set<String> keySet(){
-        return map.keySet();
+        return parameterMap.keySet();
     }
 
     public boolean isEmpty(){
-        return map.isEmpty();
+        return parameterMap.isEmpty();
     }
 
     public void putAll(Map<? extends String, ?extends Object> m){
-        map.putAll(m);
+        parameterMap.putAll(m);
     }
 
     public Map<String,Object> getMap(){
-        return map;
+        return parameterMap;
     }
     
     public CaseInsensitiveMap getQueryMap() {
@@ -127,7 +127,7 @@ public class CommandMap {
     	StackTraceElement e = stacktrace[2];//maybe this number needs to be corrected
     	log.debug("{}.{}:{}, params => {}" ,
     			source.getSimpleName(), // className
-    			e.getMethodName(), // methodName
+    			this.getMethod(), 		// e.getMethodName()
     			e.getLineNumber(), 		// sourceLineNumber
     			this.getMap());			// parameters
     }
@@ -136,5 +136,13 @@ public class CommandMap {
     public String toString() {
 		return JSONUtil.convertMapToJson(this.getMap()).toString();
     }
+
+	String method = null;
+	public void setMethod(String method) {
+		this.method = method;
+	}
+	public String getMethod() {
+		return method;
+	}
     
 }

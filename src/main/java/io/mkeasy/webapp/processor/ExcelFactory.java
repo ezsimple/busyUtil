@@ -1,7 +1,6 @@
 package io.mkeasy.webapp.processor;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -53,8 +53,7 @@ public class ExcelFactory {
         "IA", "IB", "IC", "ID", "IE", "IF", "IG", "IH", "II", "IJ", "IK", "IL", "IM", "IN", "IO", "IP", "IQ", "IR", "IS", "IT", "IU", "IV", "IW", "IX", "IY", "IZ"
 	};
 
-	public Map<String, String> getHeader(String filePath) throws Exception {
-
+	public Map<String, String> getHeader(String filePath, int headerRowNo) throws Exception {
 		if(filePath == null)
 			throw new Exception(filePath +"가 존재하지 않습니다.");
 
@@ -69,18 +68,27 @@ public class ExcelFactory {
 		tempFile.deleteOnExit();
 
 		FileUtils.copyFile(file, tempFile);
+		
+		if(headerRowNo < 0)
+			throw new Exception("헤더의 번호는 0보다 작을 수 없습니다.");
 
 		if(StringUtils.equalsIgnoreCase("xls", ext)
 				|| StringUtils.equalsIgnoreCase("xlsx", ext))
-            return readExcelHeader(tempFile);
+            return readExcelHeader(tempFile, headerRowNo);
 
 		if(StringUtils.equalsIgnoreCase("csv", ext))
-            return readCsvHeader(tempFile);
+            return readCsvHeader(tempFile, headerRowNo);
 		
 		throw new Exception("지원하지 않는 파일 포맷 입니다.");
+
 	}
 
-	private Map<String, String> readCsvHeader(File tempFile) throws Exception {
+	// 대개의 경우 첫번째 라인이 header 입니다.
+	public Map<String, String> getHeader(String filePath) throws Exception {
+		return getHeader(filePath, 1); // 첫번째 라인을 헤더로 인식합니다.
+	}
+
+	private Map<String, String> readCsvHeader(File tempFile, int headerRowNo) throws Exception {
 
 		CsvReadOption co = new CsvReadOption();
 		co.setOutputColumns(cols);
@@ -90,6 +98,8 @@ public class ExcelFactory {
 
 		List<String > cols = co.getOutputColumns();
         Map<String, String> header = new HashMap<String, String>();
+        if(headerRowNo<=0) return header;
+
 		try (CsvParser csvParser = csvReader.parse(tempFile, StandardCharsets.UTF_8)) {
 			int rowCount = 0;
 		    CsvRow row;
@@ -105,21 +115,22 @@ public class ExcelFactory {
 		return header;
 	}
 
-	private Map<String, String> readExcelHeader(File tempFile) throws Exception {
+	private Map<String, String> readExcelHeader(File tempFile, int headerRowNo) throws Exception {
 		ExcelReadOption ro = new ExcelReadOption();
 		ro.setFilePath(tempFile.getAbsolutePath());
-		
 		ro.setOutputColumns(cols);
-		ro.setStartRow(1); // skip first rows (skip titles)
-
+		ro.setStartRow(headerRowNo); // 읽어들일 헤더의 라인번호
 		List<Map<String, String>> result = ExcelRead.readHeader(ro);
-
 		FileUtils.deleteQuietly(tempFile);
-		
 		return result!=null?result.get(0):MapUtil.EMPTY;
 	}
 
-	public List<Map<String, String>> upload(String filePath, ModelMap model, CommandMap commandMap) throws Exception {
+	// 대게의 경우 첫번째 라인이 헤더 입니다.
+	private Map<String, String> readExcelHeader(File tempFile) throws Exception {
+		return readExcelHeader(tempFile, 1);// 읽어들일 헤더의 라인번호
+	}
+
+	public List<Map<String, String>> upload(String filePath, ModelMap model, CommandMap commandMap, int readRowNo) throws Exception {
 
 		if(filePath == null)
 			throw new Exception(filePath +"가 존재하지 않습니다.");
@@ -131,22 +142,35 @@ public class ExcelFactory {
 
 		FileUtils.copyFile(file, tempFile);
 		
+		// HIDDEN PARAMETER : 
+		// 대개의 경우 첫번째줄은 Header이고, 2번째 라인부터는 내용이므로 
+		// 특수한 경우에만 사용하도록 한다.
+		// 아직 CSV의 경우는 미구현 상태입니다.
+		if(readRowNo < 1)
+			throw new Exception("readRowNo는 1보다 작을 수 없습니다.");
+		// 헤더가 있는 경우 readRowNo 값은 2입니다.
+
+//		String _readRowNo = commandMap.getParam("_readRowNo");
+//		int readRowNo = 2;
+//		if(!StringUtils.isEmpty(_readRowNo) && NumberUtils.isDigits(_readRowNo))
+//			readRowNo = Integer.parseInt(_readRowNo);
+		
 		if(StringUtils.equalsIgnoreCase("xls", ext)
 				|| StringUtils.equalsIgnoreCase("xlsx", ext))
-            return readExcel(tempFile);
+            return readExcel(tempFile, readRowNo);
 
 		if(StringUtils.equalsIgnoreCase("csv", ext))
-            return readCsv(tempFile);
+            return readCsv(tempFile, readRowNo);
 		
 		throw new Exception("지원하지 않는 파일 포맷 입니다.");
 	}
 
-	private List<Map<String, String>> readCsv(File tempFile) throws Exception {
+	private List<Map<String, String>> readCsv(File tempFile, int readRowNo) throws Exception {
 		CsvReadOption co = new CsvReadOption();
 		co.setOutputColumns(cols);
 
 		CsvReader csvReader = new CsvReader();
-		csvReader.setContainsHeader(true);
+		if(readRowNo==2) csvReader.setContainsHeader(true);
 		List<String> columns = co.getOutputColumns();
 		List<Map<String, String>> result = new ArrayList<Map<String, String>>();
 		try (CsvParser csvParser = csvReader.parse(tempFile, StandardCharsets.UTF_8)) {
@@ -164,14 +188,22 @@ public class ExcelFactory {
 		return result;
 	}
 
-	private List<Map<String, String>> readExcel(File tempFile) throws Exception {
+	private List<Map<String, String>> readExcel(File tempFile, int readRowNo) throws Exception {
 		ExcelReadOption ro = new ExcelReadOption();
 		ro.setFilePath(tempFile.getAbsolutePath());
 		ro.setOutputColumns(cols);
-		ro.setStartRow(2); // skip first rows (skip titles)
+
+		if(readRowNo < 1)
+			throw new Exception("읽을 라인 번호는 1보다 작을 수 없습니다.");
+
+		ro.setStartRow(readRowNo); // 읽기 시작할 라인번호 
 		List<Map<String, String>> result = ExcelRead.read(ro);
 		FileUtils.deleteQuietly(tempFile);
 		return result;
+	}
+
+	private List<Map<String, String>> readExcel(File tempFile) throws Exception {
+		return readExcel(tempFile, 2); // skip first rows (skip titles)
 	}
 
 	public void download(HttpServletRequest request, HttpServletResponse response

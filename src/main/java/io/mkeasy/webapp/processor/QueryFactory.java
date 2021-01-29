@@ -78,6 +78,7 @@ public class QueryFactory {
 		if (result instanceof String)
 			return String.valueOf(result);
 		Object[] obj = ListUtil.toArray(result);
+		if(obj.length==0) return "";
 		return String.valueOf(obj[0]);
 	}
 

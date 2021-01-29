@@ -30,6 +30,8 @@ public class CommandMapArgumentResolver implements HandlerMethodArgumentResolver
 
 		String key = null;
 		String[] values = null;
+
+		paramMap.setMethod(request.getMethod());
 		while (enumeration.hasMoreElements()) {
 			key = (String) enumeration.nextElement();
 			values = request.getParameterValues(key);
