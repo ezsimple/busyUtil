@@ -2,6 +2,7 @@ package io.mkeasy.resolver;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -41,7 +42,10 @@ public class CommandMap {
     }
 
     public void put(String key, Object value){
-        parameterMap.put(key, value);
+    	// ConcurrentHashMap.put() method 
+    	// This method throws nullpointerexception : if the specified key or key is null
+    	// if value is null, default value is "" empty
+        parameterMap.put(key, Objects.isNull(value)?"":value);
     }
 
     public Object remove(String key){
@@ -129,7 +133,7 @@ public class CommandMap {
     			source.getSimpleName(), // className
     			this.getMethod(), 		// e.getMethodName()
     			e.getLineNumber(), 		// sourceLineNumber
-    			this.getMap());			// parameters
+    			toString());			// parameters
     }
     
     // for CacheKeyGenerator

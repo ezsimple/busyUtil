@@ -237,7 +237,9 @@ public class JSONUtil {
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			String key = entry.getKey();
 			Object value = entry.getValue();
-			json.put(key, value);
+			// Map의 값 중 null일경우 '' 공백으로 변환 처리 합니다.
+			// prevent : No converter for [class org.json.JSONObject] with preset Content-Type 'null']
+			json.put(key, value==null?"":value);
 		}
 		return json;
 	}

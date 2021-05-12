@@ -11,27 +11,32 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 public class RequestUtil {
-	
+
 	public static HttpServletRequest getHttpServletRequest() {
 		return NetUtil.getHttpServletRequest();
 	}
 	
+	public static String getURI() {
+		HttpServletRequest req = getHttpServletRequest();
+		return req==null?"":req.getServletPath();
+	}
+
 	public static JSONObject getParameterToJson(HttpServletRequest request) {
 		return JSONObject.fromObject(request.getParameterMap());
 	}
-	
+
 	public static JSONObject getParameterToJson(Map<String,Object> map) {
 		return JSONObject.fromObject(map);
 	}
-	
+
 	public static Map<String, Object> getEncodedMap(Map<String,Object> map) throws UnsupportedEncodingException {
 		Map newMap = MapUtil.newMap();
 		Iterator<String> keys = map.keySet().iterator();
 		while(keys.hasNext()) {
 			String key = keys.next();
 			Object value = map.get(key);
-      String encValue = URLEncoder.encode((String) value, "UTF-8");
-      newMap.put(key, encValue);
+			String encValue = URLEncoder.encode((String) value, "UTF-8");
+			newMap.put(key, encValue);
 		}
 		return newMap;
 	}
@@ -42,11 +47,11 @@ public class RequestUtil {
 		JSONArray  a = o.getJSONArray(key);
 		return a.getString(0);
 	}
-	
+
 	public static String getParameter(HttpServletRequest request, final String key) {
 		return request.getParameter(key);
 	}
-	
+
 	// ---------------------------------------------------------------------
 	// post 방식에서 서로 다른 컨트롤러간 데이타 공유을 하기 위해서 인데,
 	// 이 경우 사이드 이펙트가 존재하여 기능을 삭제한다.
@@ -66,8 +71,8 @@ public class RequestUtil {
         request.getSession().removeAttribute(PARAMS);
 		return params;
 	}
-	*/
-	
+	 */
+
 	// radio, checkbox의 값을 true/false 로 변환한다.
 	public static boolean convBoolean(String flag) {
 		if("on".equals(flag))

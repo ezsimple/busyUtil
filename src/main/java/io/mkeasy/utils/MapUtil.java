@@ -91,6 +91,8 @@ public class MapUtil {
 	}
 	
 	public static org.json.JSONObject toJSON(Map<String, Object> map) throws Exception {
+		// Map의 값 중 null일경우 '' 공백으로 변환 처리 합니다.
+		// No converter for [class org.json.JSONObject] with preset Content-Type 'null']
 		return JSONUtil.convertMapToJson(map);
 	}
 	

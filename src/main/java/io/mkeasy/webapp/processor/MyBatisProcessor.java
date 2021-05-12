@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
+import io.mkeasy.utils.ListUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,7 +28,9 @@ public class MyBatisProcessor implements ProcessorService{
 	
 	@Autowired
 	private SqlSession sqlSession;
-	
+
+	private List<Object> EMPTY_LIST = Arrays.asList(new Object[]{ null });
+
 	public Object execute(ProcessorParam processorParam) throws Exception {
 		String path = processorParam.getQueryPath();
 		CaseInsensitiveMap params = processorParam.getParams();
@@ -43,8 +46,10 @@ public class MyBatisProcessor implements ProcessorService{
 		SqlCommandType sqlCommandType = getSqlCommandType(path, action);
 		
 		if (sqlCommandType == SqlCommandType.SELECT) {
-			List<?> list = sqlSession.selectList(returnId, params);
-			result = list;
+			result = sqlSession.selectList(returnId, params);
+			if(result.equals(EMPTY_LIST)) { // 한개의 ROW가 모두 NULL일 경우
+				result = ListUtil.EMPTY_LIST;
+			}
 		}
 
 		if (sqlCommandType == SqlCommandType.INSERT) {
@@ -62,6 +67,7 @@ public class MyBatisProcessor implements ProcessorService{
 		if(sqlCommandType == SqlCommandType.UNKNOWN) {
 			throw new Exception("queryId=" + returnId + " does not exist");
 		}
+
         resultSet.put(returnId, result);
         return resultSet;
 		

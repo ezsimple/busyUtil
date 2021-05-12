@@ -1,5 +1,6 @@
 package io.mkeasy.webapp.processor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +41,14 @@ public class QueryFactory {
 	}
 
 	// Get Query Results using CRUD query result
+	private final static List<Object> EMPTY_LIST = Arrays.asList(new Object[]{ null });
+
 	public static Object getResult(final String ns, final String nsId, final Object result) throws Exception {
 		checkNS(ns, nsId);
 		String key = ns+"."+nsId;
 		Object map = ((Map<String, Object>) result).get(key);
+		if(map!=null && map instanceof List && map.equals(EMPTY_LIST)) // 한개의 ROW가 모두 NULL일 경우
+			return ListUtil.EMPTY;
 		return map;
 	}
 
