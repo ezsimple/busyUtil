@@ -53,6 +53,12 @@ public class QueryFactory {
 	}
 
 	// result는 getResult(ns,nsId,result)의 값입니다.
+	// result에서 List를 가져옵니다.
+	public static List<Map<String, Object>> toList(Object result) {
+		return (List<Map<String, Object>>) result;
+	}
+
+	// result는 getResult(ns,nsId,result)의 값입니다.
 	// result에서 첫번째만 Map으로 가져옵니다.
 	public static Map<String, Object> toMap(Object result) {
 		if(ListUtil.isEmpty((List<Map<String, Object>>) result))
@@ -85,12 +91,6 @@ public class QueryFactory {
 		Object[] obj = ListUtil.toArray(result);
 		if(obj.length==0) return "";
 		return String.valueOf(obj[0]);
-	}
-
-	// result는 getResult(ns,nsId,result)의 값입니다.
-	// result에서 List를 가져옵니다.
-	public static List toList(Object result) {
-		return ((List) result);
 	}
 
 	// result는 getResult(ns,nsId,result)의 값입니다.
