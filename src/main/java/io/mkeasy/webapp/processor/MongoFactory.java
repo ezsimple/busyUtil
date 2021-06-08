@@ -16,7 +16,7 @@ import io.mkeasy.utils.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class EsFactory {
+public class MongoFactory {
 
 	@Autowired
 	WebUtil webUtil;
@@ -24,30 +24,24 @@ public class EsFactory {
 	@Autowired
 	ServletContext context;
 
-	public String getEsQuery(String path, String fileName) throws IOException {
-		String queryPath = "/WEB-INF/sql/elastic";
+	public String getMongoQuery(String path, String fileName) throws IOException {
+		String queryPath = "/WEB-INF/sql/mongo";
         queryPath += "/"+path+"/"+fileName+".json";
 		InputStream is = context.getResourceAsStream(queryPath);
 		String jsonQuery = IOUtils.toString(is, "UTF-8"); 
 		return jsonQuery;
 	}
 
-	public JSONObject renderEsQuery(String entity, CommandMap commandMap) {
-
+	public JSONObject renderMongoQuery(String entity, CommandMap commandMap) {
 		Jinjava jinjava = new Jinjava();
 		String template = jinjava.render(entity, commandMap.getEgovMap());
 		JSONObject renderedObj = new JSONObject(template);
-
 		return renderedObj;
 	}
 
+// -------------------------------------------------------------------------------------
 //	public JSONObject getJSONObject(JSONObject innerObj, String key) {
-//		try {
-//            JSONObject tmpObj = (JSONObject) innerObj.get(key);
-//            return tmpObj;
-//		} catch (Exception e) {
-//			return new JSONObject();
-//		}
+//		return JSONUtil2.getJSONObject(innerObj, key);
 //	}
 //	
 //	public String getValue(JSONObject tmpObj, String key, String defaultValue, boolean roundOk) {
@@ -83,5 +77,6 @@ public class EsFactory {
 //
 //		return value;
 //	}
+// -------------------------------------------------------------------------------------
 
 }
