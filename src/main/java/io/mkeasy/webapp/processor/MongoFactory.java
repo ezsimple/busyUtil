@@ -8,8 +8,14 @@ import javax.servlet.ServletContext;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.DocumentCallbackHandler;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.BasicQuery;
+import org.springframework.data.mongodb.core.query.Query;
 
 import com.hubspot.jinjava.Jinjava;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 
 import io.mkeasy.resolver.CommandMap;
 import io.mkeasy.utils.JSONUtil2;
@@ -38,6 +44,25 @@ public class MongoFactory {
 		String template = jinjava.render(entity, commandMap.getEgovMap());
 		JSONObject renderedObj = new JSONObject(template);
 		return renderedObj;
+	}
+
+	@Autowired(required = false)
+	MongoTemplate mongoTemplate;
+	
+	public void executeQuery(String collectionName, JSONObject queryObj, DocumentCallbackHandler dch) {
+//		BasicQuery query = new BasicQuery(queryObj.toString());
+//		mongoTemplate.executeQuery(query, collectionName, dch);
+		
+		BasicDBList andList = new BasicDBList();
+		andList.add(new BasicDBObject("by", "tutorials point"));
+		andList.add(new BasicDBObject("title", "MongoDB Overview")); 
+		BasicDBObject and = new BasicDBObject("$and", andList);
+		BasicDBObject command = new BasicDBObject("find", "collectionName");
+		command.append("filter", and); 
+		
+		log.debug("{}", command.toJson());
+
+		// mongoTemplate.executeCommand(command.toJson());
 	}
 
 	public JSONObject getJSONObject(JSONObject innerObj, String key) {

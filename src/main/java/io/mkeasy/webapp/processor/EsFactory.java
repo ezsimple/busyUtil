@@ -6,8 +6,13 @@ import java.io.InputStream;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.ParseException;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.elasticsearch.client.Request;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 
 import com.hubspot.jinjava.Jinjava;
 
@@ -15,6 +20,22 @@ import io.mkeasy.resolver.CommandMap;
 import io.mkeasy.utils.JSONUtil2;
 import io.mkeasy.utils.WebUtil;
 import lombok.extern.slf4j.Slf4j;
+
+
+/*
+ * 사용법 : 
+ *  
+ * @Autowired
+ * EsFactory esFactory;
+ * 
+ * final String method = "GET";
+ * final String endpoint = "chickenfarm-broiler-idx/_search";
+ *
+ * String entity = esFactory.getEsQuery("stat/broiler", "broiler-salesR");
+ * JSONObject queryObj = esFactory.renderEsQuery(entity, commandMap);
+ * String res = esFactory.performRequest(method, endpoint, queryObj);
+ *	
+ */
 
 @Slf4j
 public class EsFactory {
@@ -34,12 +55,22 @@ public class EsFactory {
 	}
 
 	public JSONObject renderEsQuery(String entity, CommandMap commandMap) {
-
 		Jinjava jinjava = new Jinjava();
 		String template = jinjava.render(entity, commandMap.getEgovMap());
 		JSONObject renderedObj = new JSONObject(template);
-
 		return renderedObj;
+	}
+	
+	@Autowired(required = false)
+	RestClient restClient;
+	
+	public String performRequest(String method, String endpoint, JSONObject queryObj) throws ParseException, IOException {
+		Request req = new Request(method, endpoint);
+		req.setJsonEntity(queryObj.toString());
+		Response response = restClient.performRequest(req);
+		String res = (EntityUtils.toString(response.getEntity()));
+		JSONObject object = new JSONObject(res);
+		return object.toString(2);
 	}
 
 	public JSONObject getJSONObject(JSONObject innerObj, String key) {
