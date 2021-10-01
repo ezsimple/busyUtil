@@ -1,6 +1,7 @@
 package io.mkeasy.webapp.processor;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,8 @@ public class QueryFactory {
 	}
 
 	// Get Query Results using CRUD query result
-	private final static List<Object> EMPTY_LIST = Arrays.asList(new Object[]{ null });
+	// private final static List<Object> EMPTY_LIST = Arrays.asList(new Object[]{ null });
+	private final static List<Object> EMPTY_LIST = Collections.emptyList();
 
 	public static Object getResult(final String ns, final String nsId, final Object result) throws Exception {
 		checkNS(ns, nsId);

@@ -3,6 +3,7 @@ package io.mkeasy.webapp.processor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,8 @@ public class MyBatisProcessor implements ProcessorService{
 	@Autowired
 	private SqlSession sqlSession;
 
-	private List<Object> EMPTY_LIST = Arrays.asList(new Object[]{ null });
+	// private List<Object> EMPTY_LIST = Arrays.asList(new Object[]{ null });
+	private List<Object> EMPTY_LIST = Collections.emptyList();
 
 	public Object execute(ProcessorParam processorParam) throws Exception {
 		String path = processorParam.getQueryPath();

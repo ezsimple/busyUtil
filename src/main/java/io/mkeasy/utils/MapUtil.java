@@ -1,6 +1,7 @@
 package io.mkeasy.utils;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -133,5 +134,19 @@ public class MapUtil {
 				  .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 		return cloneMap;
 	}
+	
+	// VO -> MAP, BeanUtils.describe()는 Map<String, String>으로 형변환이 일어납니다.
+	public static Map<String, Object> toMap(Object obj) throws IllegalAccessException {
+		Map<String, Object> result = new HashMap<String, Object>() ;
+		for (Field field : obj.getClass().getDeclaredFields()) {
+			field.setAccessible(true);
+			String key = field.getName();
+			Object value = field.get(obj);
+			result.put(key, value);
+		}
+    	return result;
+	}
+	
+	
 	
 }

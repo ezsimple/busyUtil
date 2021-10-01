@@ -11,7 +11,7 @@ import org.apache.commons.collections.ListUtils;
 
 public class ListUtil extends ListUtils{
 
-	public final static List EMPTY = Collections.EMPTY_LIST ;
+	public final static List EMPTY = Collections.emptyList() ;
 	
 	
 	public final static <T> List<T> newList(){
