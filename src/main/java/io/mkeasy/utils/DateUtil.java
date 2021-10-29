@@ -3,11 +3,14 @@ package io.mkeasy.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +22,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDateTime;
 import org.springframework.util.ObjectUtils;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 public class DateUtil {
 
@@ -231,8 +235,143 @@ public class DateUtil {
 		return ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 	}
 
+
+    /**
+     * @param month month = 0 : 당월
+     *              month = 1 : 한달 후
+     *              month = -1 : 한달 전
+     * @return 0: 시작일
+     * 1: 종료일
+     */
+    public static List<String> getMonthStartEndDates(Date now, int month) {
+        List<String> days = new ArrayList<>();
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+
+        String lastDay = String.format("%02d", cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        if (month == 0) {
+            days.add(sdf.format(now) + "-01");
+            days.add(sdf.format(now) + lastDay);
+            return days;
+        }
+
+        cal.add(Calendar.MONTH, month);
+        lastDay = String.format("%02d", cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        days.add(sdf.format(now) + "-01");
+        days.add(sdf.format(now) + "-" + lastDay);
+        return days;
+    }
+
+    /**
+     * @param day day = 0 : 당일
+     *            day = 1 : 하루후
+     *            day = -1 : 하루전
+     * @return 0: 시작일
+     * 1: 종료일
+     */
+    public static List<String> getStartEndDates(Date now, int day) {
+
+        List<String> days = new ArrayList<>();
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+
+        if (day == 0) {
+            days.add(sdf.format(now));
+            days.add(sdf.format(now));
+            return days;
+        }
+
+        cal.add(Calendar.DATE, day);
+        if (day > 0) {
+            days.add(sdf.format(now));
+            days.add(sdf.format(cal.getTime()));
+            return days;
+        }
+
+        // day < 0 인 경우
+        days.add(sdf.format(cal.getTime()));
+        days.add(sdf.format(now));
+        return days;
+    }
+
+    /**
+     * 연속 날짜 목록
+     *
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static List<String> getListStartEndDates(String startDate, String endDate) {
+        LocalDate s = LocalDate.parse(startDate);
+        LocalDate e = LocalDate.parse(endDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        List<String> totalDates = new ArrayList<>();
+        while (!s.isAfter(e)) {
+            totalDates.add(s.format(formatter));
+            s = s.plusDays(1);
+        }
+        return totalDates;
+    }
+    
+    public static Date getTheDate(String day) {
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        LocalDate localDate = LocalDate.parse(day);
+        Date date = Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+        return date;
+    }
+    
+    public static Date getPrevMonth(String day) {
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        LocalDate localDate = LocalDate.parse(day);
+        localDate = localDate.plusMonths(-1);
+        return Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+    }
+    
+    /**
+     * LocalDate 구하기
+     * @param day
+     * @return
+     */
+    public static LocalDate getLocalDate(String day) {
+        LocalDate date = LocalDate.parse(day, DateTimeFormatter.ISO_DATE);
+        return date;
+    }
+
+    /**
+     * 이전 일자 구하기
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static List<String> getPrevStartEndDates(String startDate, String endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate s = getLocalDate(startDate);
+        LocalDate e = getLocalDate(endDate);
+        long diff = DAYS.between(s, e);
+        s = s.minusDays(diff);
+        e = e.minusDays(diff);
+        List<String> days = new ArrayList<>();
+        days.add(s.format(formatter));
+        days.add(e.format(formatter));
+        return days;
+    }
+	
 	public static void main(String[] args) {
-		getDate("");
+		// getDate("");
+		List<String> days = getMonthStartEndDates(getTheDate("2021-10-12"), -1);
+		System.out.println(days);
+
+		days = getStartEndDates(getTheDate("2021-07-10"), -7);
+		System.out.println(days);
+	
+		String startDate = days.get(0);
+		String endDate = days.get(1);
+		days = getListStartEndDates(startDate, endDate);
+		System.out.println(days);
 	}
 
 }
