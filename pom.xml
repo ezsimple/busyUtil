@@ -11,7 +11,7 @@
 	</parent>
 
 	<groupId>io.mkeasy</groupId>
-	<artifactId>mkeasy-Utils</artifactId>
+	<artifactId>busyUtil</artifactId>
 	<version>1.0.0</version>
 	<name>busyUtil</name>
 	<description>personal Java Utils</description>
@@ -254,6 +254,21 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- s: package javax.servlet.jsp does not exist -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+			<version>2.1</version>
+		</dependency>
+		<!-- e: package javax.servlet.jsp does not exist -->
+
 	</dependencies>
 
 	<build>
